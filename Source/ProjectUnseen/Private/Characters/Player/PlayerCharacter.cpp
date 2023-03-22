@@ -16,7 +16,7 @@ APlayerCharacter::APlayerCharacter()
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArm->SetupAttachment(RootComponent);
-	SpringArm->TargetArmLength = 1600.f;
+	SpringArm->TargetArmLength = 1400.f;
 	SpringArm->SetRelativeRotation(FRotator(-75.f, 0.f, 0.f));
 	SpringArm->bEnableCameraLag = true;
 	SpringArm->CameraLagSpeed = 30.f;
@@ -41,6 +41,15 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	/**
+	커서가 위치한 위젯별로 커서 아이콘을 바꿀예정임. 지금은 임시로 보이게만 했다.
+	나중에 꼭 위치를 옮기거나 내용을 수정해야 하므로 일부러 신경쓰이는 Tick에다 넣었다.	
+	*/
+	if (PlayerController->bShowMouseCursor != true)
+	{
+		PlayerController->bShowMouseCursor = true;
+	}
 
 	LookCursorDirection();
 }
@@ -72,9 +81,9 @@ void APlayerCharacter::LookCursorDirection()
 {
 	FHitResult HitResult;
 	PlayerController->GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, HitResult);
-	const FVector MouseCursorVector(HitResult.Location.X, HitResult.Location.Y, 0.f);
-	const FVector ActorLocation(this->GetActorLocation());
-	const FVector CharacterVector(ActorLocation.X, ActorLocation.Y, 0.f);
-	const FRotator CharacterLookRotator = UKismetMathLibrary::FindLookAtRotation(CharacterVector, MouseCursorVector);
-	this->SetActorRotation(CharacterLookRotator);
+
+	const FRotator CharacterLookRotator = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), HitResult.Location);
+	const FRotator TargetRotator(0.f, CharacterLookRotator.Yaw, 0.f);
+	this->SetActorRotation(TargetRotator);
+	//다만, 이경우 고저차가 있는곳위로 커서가 움직일때 Jerking현상이 있더라. Interp등으로 나중에 보완해야될듯
 }
