@@ -44,8 +44,6 @@ protected:
 	void Move(const FInputActionValue& Value);
 
 	void LookCursorDirection();
-	//virtual void MoveForward(float Value);
-	//virtual void MoveRight(float Value);
 
 private:
 
