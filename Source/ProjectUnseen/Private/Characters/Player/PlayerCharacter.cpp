@@ -42,15 +42,6 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	/**
-	커서가 위치한 위젯별로 커서 아이콘을 바꿀예정임. 지금은 임시로 보이게만 했다.
-	나중에 꼭 위치를 옮기거나 내용을 수정해야 하므로 일부러 신경쓰이는 Tick에다 넣었다.	
-	*/
-	if (PlayerController->bShowMouseCursor != true)
-	{
-		PlayerController->bShowMouseCursor = true;
-	}
-
 	LookCursorDirection();
 }
 
@@ -62,6 +53,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	{
 		EnhancedInputComponent->BindAction(MovementAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
 	}
+
 }
 
 void APlayerCharacter::Move(const FInputActionValue& Value)
