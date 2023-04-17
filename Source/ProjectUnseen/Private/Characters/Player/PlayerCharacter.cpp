@@ -8,6 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubSystems.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Components/StatComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -24,6 +25,7 @@ APlayerCharacter::APlayerCharacter()
 
 	MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Main Camera"));
 	MainCamera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
+
 }
 
 void APlayerCharacter::BeginPlay()

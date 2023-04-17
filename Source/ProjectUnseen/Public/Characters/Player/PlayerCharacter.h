@@ -34,6 +34,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = ClassSetup, BlueprintReadWrite)
 	UCameraComponent* MainCamera;
 
+
 	UPROPERTY()
 	APlayerController* PlayerController;
 

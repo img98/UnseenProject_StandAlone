@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Actors/Buildings/Turrets/BaseTurret.h"
@@ -64,22 +64,22 @@ void ABaseTurret::BeginPlay()
 
 void ABaseTurret::RotateTurret()
 {
-	if (!EnemyArray.IsValidIndex(0)) return; //ÀÌ°É ¾ÈÇØÁÖ´Ï±î ½ÃÀÛÇÏÀÚ¸¶ÀÚ Å©·¡½¬³ª´õ¶ó
+	if (!EnemyArray.IsValidIndex(0)) return; //ì´ê±¸ ì•ˆí•´ì£¼ë‹ˆê¹Œ ì‹œì‘í•˜ìë§ˆì í¬ë˜ì‰¬ë‚˜ë”ë¼
 	AEnemyCharacter* Target = EnemyArray[0];
 	if (Target == nullptr) return;
 
 	FRotator LookTargetRotator = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target->GetActorLocation());
 	TurretBodyMesh->SetWorldRotation(FRotator(0.f, LookTargetRotator.Yaw, 0.f));
 	TurretGunMesh->SetRelativeRotation(FRotator(LookTargetRotator.Pitch, 0.f, 0.f));
-	//¾ÆÁ÷ GunMeshÀÇ °¢µµ°¡ ¾î»öÇÑ °¨ÀÌ ÀûÀİÀÌ ÀÖ´Ù. ÀÌÁ¡Àº ÈÄ¿¡ ´Ù½Ã Á¡°ËÇØº¸ÀÚ.
+	//ì•„ì§ GunMeshì˜ ê°ë„ê°€ ì–´ìƒ‰í•œ ê°ì´ ì ì–ì´ ìˆë‹¤. ì´ì ì€ í›„ì— ë‹¤ì‹œ ì ê²€í•´ë³´ì.
 
-	//TODO::Fire À§Ä¡µµ ¿Å±â°í ÀÏ´ÜÀº ½ºÇÁ¸°Æ®¸¦ À§ÇÑ ÄÚµå
+	//TODO::Fire ìœ„ì¹˜ë„ ì˜®ê¸°ê³  ì¼ë‹¨ì€ ìŠ¤í”„ë¦°íŠ¸ë¥¼ ìœ„í•œ ì½”ë“œ
 	Fire();
 }
 
 void ABaseTurret::Fire()
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("[%s] Fireí•¨ìˆ˜ì˜ ì¬ì •ì˜ê°€ ì´ë£¨ì–´ì§€ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤. ìì‹Classì—ì„œ ì •ì˜í•´ì£¼ì„¸ìš”"), *GetName());
 }
 
 void ABaseTurret::FireFieldBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

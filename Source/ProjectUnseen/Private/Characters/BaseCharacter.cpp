@@ -3,6 +3,7 @@
 
 #include "Characters/BaseCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/StatComponent.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -12,6 +13,8 @@ ABaseCharacter::ABaseCharacter()
 
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+
+	StatComponent = CreateDefaultSubobject<UStatComponent>(TEXT("Stat Component"));
 }
 
 // Called when the game starts or when spawned
