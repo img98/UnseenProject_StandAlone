@@ -27,6 +27,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = ClassSetup)
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
+	UFUNCTION()
+	void OnH	it(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 
