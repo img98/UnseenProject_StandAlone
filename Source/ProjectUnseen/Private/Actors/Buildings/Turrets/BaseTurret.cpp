@@ -5,6 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "Characters/Enemy/EnemyCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Actors/Projectiles/BaseProjectile.h"
 
 ABaseTurret::ABaseTurret()
 {
@@ -16,6 +17,10 @@ ABaseTurret::ABaseTurret()
 	TurretBodyMesh->SetupAttachment(TurretRootMesh);
 	TurretGunMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretGunMesh"));
 	TurretGunMesh->SetupAttachment(TurretBodyMesh);
+	RotateGunAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("RotateGunAnchor"));
+	RotateGunAnchor->SetupAttachment(TurretGunMesh);
+	ProjectileSpawner = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSpawner"));
+	ProjectileSpawner->SetupAttachment(ProjectileSpawner);
 	FireField = CreateDefaultSubobject<USphereComponent>(TEXT("FireField"));
 	FireField->SetupAttachment(GetRootComponent());
 	
@@ -33,23 +38,32 @@ void ABaseTurret::Tick(float DeltaTime)
 	switch (TurretState)
 	{
 	case ETurretState::ETS_NonCombat:
-		break;
-
-	case ETurretState::ETS_Searching:
-		RotateTurret();
-		break;
-
-	case ETurretState::ETS_InCombat:
-		if (EnemyArray.Num() < 1)
 		{
-			SetTurretState(ETurretState::ETS_Searching);
+			break;
 		}
-		Fire();
-		break;
-
+	case ETurretState::ETS_Searching:
+		{
+			RotateTurret();
+			break;
+		}
+	case ETurretState::ETS_InCombat:
+		{
+			if (EnemyArray.Num() < 1)
+			{
+				SetTurretState(ETurretState::ETS_Searching);
+			}
+			if (bCanFire)
+			{
+				Fire();
+				FireDelay(DeltaTime);
+			}
+			break;
+		}
 	default:
-		UE_LOG(LogTemp, Warning, TEXT("[%s] TurretState is Default!"),*GetName());
-		break;
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[%s] TurretState is Default!"), *GetName());
+			break;
+		}
 	}
 }
 
@@ -68,18 +82,55 @@ void ABaseTurret::RotateTurret()
 	AEnemyCharacter* Target = EnemyArray[0];
 	if (Target == nullptr) return;
 
-	FRotator LookTargetRotator = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target->GetActorLocation());
+	FRotator LookTargetRotator = UKismetMathLibrary::FindLookAtRotation(RotateGunAnchor->GetComponentLocation(), Target->GetActorLocation());
 	TurretBodyMesh->SetWorldRotation(FRotator(0.f, LookTargetRotator.Yaw, 0.f));
 	TurretGunMesh->SetRelativeRotation(FRotator(LookTargetRotator.Pitch, 0.f, 0.f));
-	//아직 GunMesh의 각도가 어색한 감이 적잖이 있다. 이점은 후에 다시 점검해보자.
 
-	//TODO::Fire 위치도 옮기고 일단은 스프린트를 위한 코드
-	Fire();
+	// TODO : Rotate가 현위치에서 목적지까지 부드럽게 움직이는 방법을 고안해보자.
+
 }
 
 void ABaseTurret::Fire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("[%s] Fire함수의 재정의가 이루어지지 않았습니다. 자식Class에서 정의해주세요"), *GetName());
+
+	bCanFire = false;
+	if (ProjectileClass)
+	{
+		// 씬컴포넌트로해서 따로 트랜스폼 안따줘도 될듯? //FTransform ProjectileSpawnTransform = ProjectileSpawner->GetComponentTransform();
+		APawn* InstigatorPawn = Cast<APawn>(GetOwner());
+		FActorSpawnParameters SpawnParams;
+		//SpawnParams.Owner = TODO ; 
+		SpawnParams.Instigator = InstigatorPawn;
+
+		GetWorld()->SpawnActor<ABaseProjectile>(
+			ProjectileClass,
+			ProjectileSpawner->GetComponentLocation(),
+			ProjectileSpawner->GetComponentRotation(),
+			SpawnParams
+		);
+	}
+}
+
+void ABaseTurret::FireDelay(float DeltaTime)
+{
+	//TODO :: 각 터렛들의 프로퍼티인 'FireSpeed'초 후에 bCanFire = true 로 바꾸기
+
+	/** 
+	FTimerHandle myTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(myTimerHandle, FTimerDelegate::CreateLambda([&]()
+		{
+			// 내가 원하는 코드 구현
+			DoSomething();
+
+			// 타이머 초기화
+			GetWorld()->GetTimerManager().ClearTimer(fadeOutTimerHandle);
+		}), InDelayTime, false); // 반복 실행을 하고 싶으면 false 대신 true 대입
+	*/
+
+	GetWorld()->GetTimerManager().SetTimer(
+
+	);
 }
 
 void ABaseTurret::FireFieldBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

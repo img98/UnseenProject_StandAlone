@@ -28,7 +28,14 @@ protected:
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
 	UFUNCTION()
-	void OnH	it(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
+	UPROPERTY(EditAnywhere, Category = ClassSetup)
+	USoundBase* HitSound;
+	UPROPERTY(EditAnywhere, Category = ClassSetup)
+	UParticleSystem* HitParticle;
+	UPROPERTY(EditAnywhere, Category = ClassSetup)
+	float DamageValue=0;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

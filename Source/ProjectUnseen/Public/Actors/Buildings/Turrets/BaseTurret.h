@@ -11,6 +11,7 @@
 
 class USphereComponent;
 class AEnemyCharacter;
+class ABaseProjectile;
 
 UCLASS()
 class PROJECTUNSEEN_API ABaseTurret : public ABaseBuildingActor, public ITurretInterface
@@ -26,8 +27,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	ETurretState TurretState = ETurretState::ETS_MAX;
-
+	// ÅÍ·¿ ÄÄÆ÷³ÍÆ® ±¸Á¶
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	USceneComponent* Root;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -37,8 +37,25 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* TurretGunMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	USceneComponent* RotateGunAnchor;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	USceneComponent* ProjectileSpawner;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	USphereComponent* FireField;
 
+	//ÅÍ·¿ º° projectile ±¸¼º¹°
+	UPROPERTY(VisibleAnywhere, Category = ClassSetup)
+	TSubclassOf<ABaseProjectile> ProjectileClass;
+	UPROPERTY(VisibleAnywhere, Category = ClassSetup)
+	UParticleSystem* MuzzleParticle;
+	UPROPERTY(VisibleAnywhere, Category = ClassSetup)
+	USoundBase* FireSound;
+
+	//ÅÍ·¿ ÇÁ·ÎÆÛÆ¼
+	FTimerHandle FireTimer;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	ETurretState TurretState = ETurretState::ETS_MAX;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<AEnemyCharacter*> EnemyArray;
 
@@ -55,6 +72,8 @@ protected:
 
 	UFUNCTION()
 	virtual void Fire();
+	UFUNCTION()
+	virtual void FireDelay(float DeltaTime);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanFire;
