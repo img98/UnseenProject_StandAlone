@@ -18,7 +18,7 @@ void AGaussTurret::Fire()
 	UNiagaraFunctionLibrary::SpawnSystemAttached()
 	*/
 	//지울코드
-	bCanFire = true;
+	bCanFire = false;
 }
 
 void AGaussTurret::Tick(float DeltaTime)
