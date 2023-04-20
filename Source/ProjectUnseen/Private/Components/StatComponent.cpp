@@ -36,3 +36,8 @@ void UStatComponent::SetStats(float InMaxHP, float InAttackDamage, float InAttac
 	SetAttackSpeed(InAttackSpeed);
 	SetMovementSpeed(InMovementSpeed);
 }
+
+float UStatComponent::GetHPRatio()
+{
+	return CurrentHP / MaxHP;
+}

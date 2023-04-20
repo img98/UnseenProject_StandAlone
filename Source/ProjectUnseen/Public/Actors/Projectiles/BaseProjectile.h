@@ -21,11 +21,11 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
+	UPROPERTY(VisibleAnywhere)
 	USphereComponent* SphereCollision;
-	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BulletMesh;
-	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
+	UPROPERTY(VisibleAnywhere)
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
 	UFUNCTION()

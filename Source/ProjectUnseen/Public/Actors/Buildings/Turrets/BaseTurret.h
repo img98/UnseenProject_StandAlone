@@ -24,28 +24,26 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void TurretBehaviorStateMachine(float DeltaTime);
+
 protected:
 	virtual void BeginPlay() override;
 
 	// ÅÍ·¿ ÄÄÆ÷³ÍÆ® ±¸Á¶
-	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
+	UPROPERTY(VisibleAnywhere)
 	USceneComponent* Root;
-	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* TurretRootMesh;
-	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* TurretBodyMesh;
-	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* TurretGunMesh;
-	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
+	UPROPERTY(VisibleAnywhere)
 	USceneComponent* RotateGunAnchor;
-	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
-	USceneComponent* ProjectileSpawner;
-	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
+	UPROPERTY(VisibleAnywhere)
 	USphereComponent* FireField;
 
 	//ÅÍ·¿ º° projectile ±¸¼º¹°
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
-	TSubclassOf<ABaseProjectile> ProjectileClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
 	UParticleSystem* MuzzleParticle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
