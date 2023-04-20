@@ -5,6 +5,8 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Actors/Buildings/Turrets/BaseTurret.h"
+#include "Components/StatComponent.h"
 
 ABaseProjectile::ABaseProjectile()
 {
@@ -27,12 +29,12 @@ ABaseProjectile::ABaseProjectile()
 	/** Physics-AutoWeld 안꺼줘도 콜리젼프리셋 NoCollision으로 하면 괜찮지 않을까?*/
 	BulletMesh->SetCollisionProfileName(TEXT("NoCollision"));
 	BulletMesh->SetCastShadow(false);
-	ProjectileMovementComponent->InitialSpeed = 30000.f;
-	ProjectileMovementComponent->MaxSpeed = 30000.f;
+	ProjectileMovementComponent->InitialSpeed = 6000.f;
+	ProjectileMovementComponent->MaxSpeed = 6000.f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	//velocity(로테이션말고 말그대로 velocity란이 있더라)와 bounce설정이 필요한가?
 	ProjectileMovementComponent->bShouldBounce = true;
-	ProjectileMovementComponent->Velocity = FVector(300.f, 0.f, 0.f);
+	ProjectileMovementComponent->Velocity = FVector(600.f, 0.f, 0.f);
 
 	SphereCollision->OnComponentHit.AddDynamic(this, &ABaseProjectile::OnHit); //Overlap이 아니라 OnHit라서 OnComponentHit 사용
 }
@@ -53,7 +55,12 @@ void ABaseProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActo
 	else
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, Hit.Location);
-		UE_LOG(LogTemp, Warning, TEXT("Projectile On Hit!"));
+		FDamageEvent DamageEvent;
+		if (IsValid(ParentTurret))
+		{
+			OtherActor->TakeDamage(ParentTurret->GetStatComponent()->GetAttackDamage(), DamageEvent, UGameplayStatics::GetPlayerController(this, 0), this);
+		}
+		
 		Destroy();
 	}
 

@@ -38,3 +38,11 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float FinalDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	StatComponent->DecreaseCurrentHP(FinalDamage);
+	UE_LOG(LogTemp, Warning, TEXT("Take [%.1f] damage, now [%.1f] HP left"), FinalDamage, StatComponent->GetCurrentHP());
+	return FinalDamage;
+}
+

@@ -4,21 +4,19 @@
 #include "Actors/Buildings/Turrets/GaussTurret.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Components/StatComponent.h"
 
 AGaussTurret::AGaussTurret()
 {
-	FireSpeed = 2.5f;
-	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
-	NiagaraComponent->SetupAttachment(TurretGunMesh);
 }
 
 void AGaussTurret::Fire()
 {
+	Super::Fire();
 	/** TODO: 무기이펙트 생성 
 	UNiagaraFunctionLibrary::SpawnSystemAttached()
 	*/
-	//지울코드
-	bCanFire = false;
+	//bCanFire = false;
 }
 
 void AGaussTurret::Tick(float DeltaTime)
@@ -29,4 +27,5 @@ void AGaussTurret::Tick(float DeltaTime)
 void AGaussTurret::BeginPlay()
 {
 	Super::BeginPlay();
+	StatComponent->SetStats(10.f, 10.f, 2.5f, 0.f);
 }

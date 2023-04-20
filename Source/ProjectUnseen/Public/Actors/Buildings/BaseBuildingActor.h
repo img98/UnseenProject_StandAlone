@@ -6,21 +6,24 @@
 #include "GameFramework/Actor.h"
 #include "BaseBuildingActor.generated.h"
 
+class UStatComponent;
+
 UCLASS()
 class PROJECTUNSEEN_API ABaseBuildingActor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ABaseBuildingActor();
 
+
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
+	UStatComponent* StatComponent;
 
+public:	
+	virtual void Tick(float DeltaTime) override;
+	FORCEINLINE UStatComponent* GetStatComponent() { return StatComponent; }
 };
