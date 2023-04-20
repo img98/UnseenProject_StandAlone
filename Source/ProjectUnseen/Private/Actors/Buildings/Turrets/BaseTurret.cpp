@@ -22,8 +22,6 @@ ABaseTurret::ABaseTurret()
 	TurretGunMesh->SetupAttachment(TurretBodyMesh);
 	RotateGunAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("RotateGunAnchor"));
 	RotateGunAnchor->SetupAttachment(TurretGunMesh);
-	ProjectileSpawner = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSpawner"));
-	ProjectileSpawner->SetupAttachment(TurretGunMesh);
 	FireField = CreateDefaultSubobject<USphereComponent>(TEXT("FireField"));
 	FireField->SetupAttachment(GetRootComponent());
 	
@@ -38,40 +36,45 @@ void ABaseTurret::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	TurretBehaviorStateMachine(DeltaTime);
+}
+
+void ABaseTurret::TurretBehaviorStateMachine(float DeltaTime)
+{
 	switch (TurretState)
 	{
 	case ETurretState::ETS_NonCombat:
-		{
-			break;
-		}
+	{
+		break;
+	}
 	case ETurretState::ETS_Searching:
+	{
+		RotateTurret();
+		if (EnemyArray.Num() > 0)
 		{
-			RotateTurret();
-			if (EnemyArray.Num() > 0)
-			{
-				SetTurretState(ETurretState::ETS_InCombat);
-			}
-			break;
+			SetTurretState(ETurretState::ETS_InCombat);
 		}
+		break;
+	}
 	case ETurretState::ETS_InCombat:
+	{
+		LookAtEnemy(DeltaTime);
+		if (EnemyArray.Num() < 1)
 		{
-			LookAtEnemy(DeltaTime);
-			if (EnemyArray.Num() < 1)
-			{
-				SetTurretState(ETurretState::ETS_Searching);
-			}
-			if (bCanFire)
-			{
-				Fire();
-				FireDelay(DeltaTime);
-			}
-			break;
+			SetTurretState(ETurretState::ETS_Searching);
 		}
+		if (bCanFire)
+		{
+			Fire();
+			FireDelay(DeltaTime);
+		}
+		break;
+	}
 	default:
-		{
-			UE_LOG(LogTemp, Warning, TEXT("[%s] TurretState is Default!"), *GetName());
-			break;
-		}
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[%s] TurretState is Default!"), *GetName());
+		break;
+	}
 	}
 }
 
@@ -110,24 +113,6 @@ void ABaseTurret::Fire()
 	UE_LOG(LogTemp, Warning, TEXT("[%s] Fire함수의 재정의가 이루어지지 않았습니다. 자식Class에서 정의해주세요"), *GetName());
 
 	bCanFire = false;
-	if (ProjectileClass && FireSound && MuzzleParticle)
-	{
-		// 씬컴포넌트로해서 따로 트랜스폼 안따줘도 될듯? //FTransform ProjectileSpawnTransform = ProjectileSpawner->GetComponentTransform();
-		APawn* InstigatorPawn = Cast<APawn>(GetOwner());
-		FActorSpawnParameters SpawnParams;
-		//SpawnParams.Owner = TODO ; 
-		SpawnParams.Instigator = InstigatorPawn;
-
-		ABaseProjectile* SpawnedProjectile = GetWorld()->SpawnActor<ABaseProjectile>(
-			ProjectileClass,
-			ProjectileSpawner->GetComponentLocation(),
-			ProjectileSpawner->GetComponentRotation(),
-			SpawnParams
-		);
-		SpawnedProjectile->SetParnetTurret(this);
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, ProjectileSpawner->GetComponentLocation());
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleParticle, ProjectileSpawner->GetComponentLocation());
-	}
 }
 
 void ABaseTurret::FireDelay(float DeltaTime)
@@ -136,7 +121,6 @@ void ABaseTurret::FireDelay(float DeltaTime)
 		FireTimer,
 		FTimerDelegate::CreateLambda([&]() {
 			//TODO : Just Wait for 'Firespeed' seconds & ClearTimer
-			UE_LOG(LogTemp, Warning, TEXT("Fire!"));
 			bCanFire = true;
 			GetWorld()->GetTimerManager().ClearTimer(FireTimer);
 			}),

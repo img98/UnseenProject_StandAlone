@@ -21,7 +21,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UStatComponent* StatComponent;
 
 public:	

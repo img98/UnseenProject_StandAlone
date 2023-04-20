@@ -37,6 +37,9 @@ private:
 	float MovementSpeed;
 
 public:
+
+	UFUNCTION(BlueprintCallable)
+	float GetHPRatio();
 	
 	UFUNCTION(BlueprintCallable)
 	void SetStats(float InMaxHP, float InAttackDamage, float InAttackSpeed, float InMovementSpeed);
