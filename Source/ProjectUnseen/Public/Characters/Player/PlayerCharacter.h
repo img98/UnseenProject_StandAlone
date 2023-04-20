@@ -29,12 +29,10 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
-	UPROPERTY(EditAnywhere, Category = ClassSetup, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, Category = "CustomClassSetup", BlueprintReadWrite)
 	USpringArmComponent* SpringArm;
-	UPROPERTY(EditAnywhere, Category = ClassSetup, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, Category = "CustomClassSetup", BlueprintReadWrite)
 	UCameraComponent* MainCamera;
-
-
 	UPROPERTY()
 	APlayerController* PlayerController;
 

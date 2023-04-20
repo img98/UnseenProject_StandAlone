@@ -28,27 +28,27 @@ protected:
 	virtual void BeginPlay() override;
 
 	// ÅÍ·¿ ÄÄÆ÷³ÍÆ® ±¸Á¶
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
 	USceneComponent* Root;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
 	UStaticMeshComponent* TurretRootMesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
 	UStaticMeshComponent* TurretBodyMesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
 	UStaticMeshComponent* TurretGunMesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
 	USceneComponent* RotateGunAnchor;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
 	USceneComponent* ProjectileSpawner;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
 	USphereComponent* FireField;
 
 	//ÅÍ·¿ º° projectile ±¸¼º¹°
-	UPROPERTY(VisibleAnywhere, Category = ClassSetup)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
 	TSubclassOf<ABaseProjectile> ProjectileClass;
-	UPROPERTY(VisibleAnywhere, Category = ClassSetup)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
 	UParticleSystem* MuzzleParticle;
-	UPROPERTY(VisibleAnywhere, Category = ClassSetup)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
 	USoundBase* FireSound;
 
 	//ÅÍ·¿ ÇÁ·ÎÆÛÆ¼
@@ -56,14 +56,20 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	ETurretState TurretState = ETurretState::ETS_MAX;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<AEnemyCharacter*> EnemyArray;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float RotateInterpSpeed = 10.f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bCanFire = true;
 
 	UFUNCTION()
 	FORCEINLINE void SetTurretState(ETurretState InState) { TurretState = InState; };
 
 	UFUNCTION()
 	void RotateTurret();
+	UFUNCTION()
+	void LookAtEnemy(float DeltaTime);
 
 	UFUNCTION()
 	virtual void FireFieldBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -75,10 +81,6 @@ protected:
 	UFUNCTION()
 	virtual void FireDelay(float DeltaTime);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool bCanFire;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	float FireSpeed;
 
 private:
 

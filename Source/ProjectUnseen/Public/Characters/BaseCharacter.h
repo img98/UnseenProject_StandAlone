@@ -7,6 +7,7 @@
 #include "BaseCharacter.generated.h"
 
 class UStatComponent;
+class AController;
 
 UCLASS()
 class PROJECTUNSEEN_API ABaseCharacter : public ACharacter
@@ -16,15 +17,18 @@ class PROJECTUNSEEN_API ABaseCharacter : public ACharacter
 public:
 	ABaseCharacter();
 
+
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, Category = ClassSetup)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
 	UStatComponent* StatComponent;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	FORCEINLINE UStatComponent* GetStatComponent() { return StatComponent; }
 
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 };
