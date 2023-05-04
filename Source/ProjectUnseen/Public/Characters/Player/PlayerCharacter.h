@@ -12,6 +12,15 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 
+UENUM(BlueprintType)
+enum class EPlayerMode :uint8
+{
+	EPM_Shooting UMETA(DisplayName = "Shooting"),
+	EPM_Build UMETA(DisplayName = "Build"),
+
+	EPM_MAX UMETA(DisplayName = "DefaultMAX")
+};
+
 UCLASS()
 class PROJECTUNSEEN_API APlayerCharacter : public ABaseCharacter
 {

@@ -6,9 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "SAPlayerController.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PROJECTUNSEEN_API ASAPlayerController : public APlayerController
 {
