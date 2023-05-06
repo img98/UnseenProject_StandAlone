@@ -71,6 +71,8 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 	AddMovementInput(ControlYDirection, MovementVector.X);
 }
 
+
+
 void APlayerCharacter::LookCursorDirection()
 {
 	FHitResult HitResult;
@@ -80,4 +82,9 @@ void APlayerCharacter::LookCursorDirection()
 	const FRotator TargetRotator(0.f, CharacterLookRotator.Yaw, 0.f);
 	this->SetActorRotation(TargetRotator);
 	//다만, 이경우 고저차가 있는곳위로 커서가 움직일때 Jerking현상이 있더라. Interp등으로 나중에 보완해야될듯
+}
+
+void APlayerCharacter::BuildActionTrigger()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Build Action Trigger activated!"));
 }

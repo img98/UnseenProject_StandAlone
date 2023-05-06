@@ -49,10 +49,14 @@ protected:
 	UInputMappingContext* MappingContext;
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* MovementAction;
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* PlayerAction;
 
 	void Move(const FInputActionValue& Value);
 
 	void LookCursorDirection();
+
+	void BuildActionTrigger();
 
 private:
 
