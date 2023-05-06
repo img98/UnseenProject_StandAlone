@@ -36,7 +36,8 @@ void APlayerCharacter::BeginPlay()
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 	{
-		Subsystem->AddMappingContext(MappingContext, 0);
+		Subsystem->AddMappingContext(IMC_PlayerCombat, 0); //뒤 숫자는 우선순위를 의미하는듯
+		//Subsystem->RemoveMappingContext(IMC_PlayerCombat)
 	}
 }
 
@@ -51,10 +52,12 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
-	{
-		EnhancedInputComponent->BindAction(MovementAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
-	}
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
+
+	EnhancedInputComponent->BindAction(IA_Movement, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
+	EnhancedInputComponent->BindAction(IA_BuildMenuTrigger, ETriggerEvent::Triggered, this, &APlayerCharacter::BuildMenuTrigger);
+	EnhancedInputComponent->BindAction(IA_Fire, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
+
 
 }
 
@@ -84,7 +87,12 @@ void APlayerCharacter::LookCursorDirection()
 	//다만, 이경우 고저차가 있는곳위로 커서가 움직일때 Jerking현상이 있더라. Interp등으로 나중에 보완해야될듯
 }
 
-void APlayerCharacter::BuildActionTrigger()
+void APlayerCharacter::Fire()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Player Fire!"));
+}
+
+void APlayerCharacter::BuildMenuTrigger()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Build Action Trigger activated!"));
 }
