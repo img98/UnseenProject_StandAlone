@@ -46,17 +46,23 @@ protected:
 	APlayerController* PlayerController;
 
 	UPROPERTY(EditAnywhere, Category = Input)
-	UInputMappingContext* MappingContext;
+	UInputMappingContext* IMC_PlayerCombat;
 	UPROPERTY(EditAnywhere, Category = Input)
-	UInputAction* MovementAction;
+	UInputMappingContext* IMC_PlayerBuildMenu;
 	UPROPERTY(EditAnywhere, Category = Input)
-	UInputAction* PlayerAction;
+	UInputAction* IA_Movement;
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* IA_Fire;
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* IA_BuildMenuTrigger;
 
 	void Move(const FInputActionValue& Value);
 
 	void LookCursorDirection();
 
-	void BuildActionTrigger();
+	void Fire();
+
+	void BuildMenuTrigger();
 
 private:
 
