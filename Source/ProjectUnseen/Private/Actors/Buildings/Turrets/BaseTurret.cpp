@@ -43,38 +43,38 @@ void ABaseTurret::TurretBehaviorStateMachine(float DeltaTime)
 {
 	switch (TurretState)
 	{
-	case ETurretState::ETS_NonCombat:
-	{
-		break;
-	}
-	case ETurretState::ETS_Searching:
-	{
-		RotateTurret();
-		if (EnemyArray.Num() > 0)
+		case ETurretState::ETS_NonCombat:
 		{
-			SetTurretState(ETurretState::ETS_InCombat);
+			break;
 		}
-		break;
-	}
-	case ETurretState::ETS_InCombat:
-	{
-		LookAtEnemy(DeltaTime);
-		if (EnemyArray.Num() < 1)
+		case ETurretState::ETS_Searching:
 		{
-			SetTurretState(ETurretState::ETS_Searching);
+			RotateTurret();
+			if (EnemyArray.Num() > 0)
+			{
+				SetTurretState(ETurretState::ETS_InCombat);
+			}
+			break;
 		}
-		if (bCanFire)
+		case ETurretState::ETS_InCombat:
 		{
-			Fire();
-			FireDelay(DeltaTime);
+			LookAtEnemy(DeltaTime);
+			if (EnemyArray.Num() < 1)
+			{
+				SetTurretState(ETurretState::ETS_Searching);
+			}
+			if (bCanFire)
+			{
+				Fire();
+				FireDelay(DeltaTime);
+			}
+			break;
 		}
-		break;
-	}
-	default:
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[%s] TurretState is Default!"), *GetName());
-		break;
-	}
+		default:
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[%s] TurretState is Default!"), *GetName());
+			break;
+		}
 	}
 }
 

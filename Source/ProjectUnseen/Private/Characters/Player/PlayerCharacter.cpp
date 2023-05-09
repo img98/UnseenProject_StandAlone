@@ -26,6 +26,7 @@ APlayerCharacter::APlayerCharacter()
 	MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Main Camera"));
 	MainCamera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 
+	SetPlayerState(EPlayerState::EPS_MAX);
 }
 
 void APlayerCharacter::BeginPlay()
@@ -39,6 +40,8 @@ void APlayerCharacter::BeginPlay()
 		Subsystem->AddMappingContext(IMC_PlayerCombat, 0); //뒤 숫자는 우선순위를 의미하는듯
 		//Subsystem->RemoveMappingContext(IMC_PlayerCombat)
 	}
+
+	SetPlayerState(EPlayerState::EPS_Shooting);
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -59,6 +62,14 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	EnhancedInputComponent->BindAction(IA_Fire, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
 
 
+}
+
+void APlayerCharacter::SetPlayerState(EPlayerState InState)
+{
+	if (CurrentState != EPlayerState::EPS_Dead)
+	{
+		CurrentState = InState;
+	}
 }
 
 void APlayerCharacter::Move(const FInputActionValue& Value)

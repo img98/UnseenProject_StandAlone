@@ -1,5 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -13,17 +12,19 @@ class UInputMappingContext;
 class UInputAction;
 
 UENUM(BlueprintType)
-enum class EPlayerMode :uint8
+enum class EPlayerState : uint8
 {
-	EPM_Shooting UMETA(DisplayName = "Shooting"),
-	EPM_Build UMETA(DisplayName = "Build"),
+	EPS_Shooting UMETA(DisplayName = "Shooting"),
+	EPS_Build UMETA(DisplayName = "Build"),
+	EPS_Dead UMETA(DisplayName = "Dead"),
 
-	EPM_MAX UMETA(DisplayName = "DefaultMAX")
+	EPS_MAX UMETA(DisplayName = "DefaultMAX")
 };
 
 UCLASS()
 class PROJECTUNSEEN_API APlayerCharacter : public ABaseCharacter
 {
+
 	GENERATED_BODY()
 
 public:
@@ -37,6 +38,7 @@ protected:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void SetPlayerState(EPlayerState InState);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USpringArmComponent* SpringArm;
@@ -44,6 +46,9 @@ protected:
 	UCameraComponent* MainCamera;
 	UPROPERTY()
 	APlayerController* PlayerController;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	EPlayerState CurrentState;
 
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputMappingContext* IMC_PlayerCombat;
@@ -62,6 +67,7 @@ protected:
 
 	void Fire();
 
+	UFUNCTION(BlueprintCallable)
 	void BuildMenuTrigger();
 
 private:
