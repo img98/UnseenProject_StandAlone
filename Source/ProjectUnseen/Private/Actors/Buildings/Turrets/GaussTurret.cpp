@@ -68,7 +68,18 @@ void AGaussTurret::CoolingGunFever(float DeltaTime)
 	HotMetal->SetScalarParameterValueOnMaterials(FName(TEXT("Intensity")), HotMetal_Intensity);
 }
 
+void AGaussTurret::BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	Super::BuildCollisionBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+}
+
+void AGaussTurret::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	Super::BuildCollisionEndOverlap(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
+}
+
 void AGaussTurret::BeginPlay()
 {
 	Super::BeginPlay();
 }
+

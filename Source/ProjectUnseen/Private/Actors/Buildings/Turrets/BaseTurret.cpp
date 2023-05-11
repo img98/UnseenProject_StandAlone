@@ -12,8 +12,6 @@
 
 ABaseTurret::ABaseTurret()
 {
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	SetRootComponent(Root);
 	TurretRootMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretRootMesh"));
 	TurretRootMesh->SetupAttachment(Root);
 	TurretBodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretBodyMesh"));
@@ -85,6 +83,24 @@ void ABaseTurret::BeginPlay()
 	FireField->OnComponentBeginOverlap.AddDynamic(this, &ABaseTurret::FireFieldBeginOverlap);
 	FireField->OnComponentEndOverlap.AddDynamic(this, &ABaseTurret::FireFieldEndOverlap);
 
+}
+
+void ABaseTurret::BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	Super::BuildCollisionBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+
+	ChangeMeshMaterialToRed(TurretRootMesh);
+	ChangeMeshMaterialToRed(TurretBodyMesh);
+	ChangeMeshMaterialToRed(TurretGunMesh);
+}
+
+void ABaseTurret::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	Super::BuildCollisionEndOverlap(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
+
+	ChangeMeshMaterialToGreen(TurretRootMesh);
+	ChangeMeshMaterialToGreen(TurretBodyMesh);
+	ChangeMeshMaterialToGreen(TurretGunMesh);
 }
 
 void ABaseTurret::RotateTurret()
