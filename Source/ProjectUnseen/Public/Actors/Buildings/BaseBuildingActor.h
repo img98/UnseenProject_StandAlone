@@ -23,8 +23,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	void BindBuildCollisionOverlap(UObject& InClass);
-
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* Root;
 	UPROPERTY(VisibleAnywhere)
@@ -41,15 +39,12 @@ protected:
 	ETurretBuildState CurrentBuildState;
 
 
-
-
 	UFUNCTION()
 	virtual void BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	virtual void BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	UFUNCTION()
 	void BuildCompleted();
-	//마테리얼 색바꾸는 함수를 구현해야 한다.
 	UFUNCTION(BlueprintCallable)
 	virtual void ChangeMeshMaterialToGreen(UStaticMeshComponent* InMesh);
 	UFUNCTION(BlueprintCallable)
