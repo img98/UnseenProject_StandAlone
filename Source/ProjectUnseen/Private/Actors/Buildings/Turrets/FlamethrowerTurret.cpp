@@ -54,7 +54,7 @@ void AFlamethrowerTurret::TurretBehaviorStateMachine(float DeltaTime)
 
 	switch (TurretState)
 	{
-	case ETurretState::ETS_NonCombat:
+	case ETurretState::ETS_OnBuild:
 	{
 		break;
 	}
@@ -109,4 +109,16 @@ void AFlamethrowerTurret::SetTurretActivation(bool bBool)
 		PersistentFireFX->Deactivate();
 		LoopingFiresound->Deactivate();
 	}
+}
+
+void AFlamethrowerTurret::BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+}
+
+void AFlamethrowerTurret::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+}
+
+void AFlamethrowerTurret::BuildCompleted()
+{
 }

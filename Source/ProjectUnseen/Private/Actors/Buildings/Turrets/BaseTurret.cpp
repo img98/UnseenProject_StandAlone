@@ -27,7 +27,7 @@ ABaseTurret::ABaseTurret()
 	TurretBodyMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	TurretGunMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 
-	TurretState = ETurretState::ETS_Searching;
+	TurretState = ETurretState::ETS_OnBuild;
 }
 
 void ABaseTurret::Tick(float DeltaTime)
@@ -41,8 +41,11 @@ void ABaseTurret::TurretBehaviorStateMachine(float DeltaTime)
 {
 	switch (TurretState)
 	{
-		case ETurretState::ETS_NonCombat:
+		case ETurretState::ETS_OnBuild:
 		{
+			FHitResult CurorHitResult;
+			UGameplayStatics::GetPlayerController(this, 0)->GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, CurorHitResult); // 후에 Build용 traceChannel만들어서 바꿀것, traceComplex먼지몰라서 true
+			SetActorLocation(CurorHitResult.Location);
 			break;
 		}
 		case ETurretState::ETS_Searching:
@@ -161,4 +164,9 @@ void ABaseTurret::FireFieldEndOverlap(UPrimitiveComponent* OverlappedComp, AActo
 	if (EnemyCharacter == nullptr) return;
 
 	EnemyArray.Remove(EnemyCharacter);
+}
+
+void ABaseTurret::BuildCompleted()
+{
+	//자식클래스에서 완성하기
 }

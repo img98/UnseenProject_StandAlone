@@ -24,8 +24,13 @@ public:
 
 	void CoolingGunFever(float DeltaTime);
 
+
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	virtual void BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	virtual void BuildCompleted();
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* HotMetal;

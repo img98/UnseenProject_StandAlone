@@ -19,14 +19,8 @@ void ABaseBuildingActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// ! BuildCollison Overlap바인드 자식클래스에서 해줄것!
 
-}
-
-void ABaseBuildingActor::BindBuildCollisionOverlap(UObject& InClass)
-{
-	BuildCollision->OnComponentBeginOverlap.AddDynamic(this, &InClass::BuildCollisionBeginOverlap); //InClass의 타입을 뭐라고 해야되지?
-	//BuildCollision->OnComponentBeginOverlap.AddDynamic(this, &ABaseBuildingActor::BuildCollisionBeginOverlap);
-	BuildCollision->OnComponentEndOverlap.AddDynamic(this, &InClass::BuildCollisionEndOverlap);
 }
 
 void ABaseBuildingActor::Tick(float DeltaTime)
@@ -51,7 +45,7 @@ void ABaseBuildingActor::BuildCompleted()
 
 void ABaseBuildingActor::ChangeMeshMaterialToGreen(UStaticMeshComponent* InMesh)
 {
-	checkf(GreenMaterial == nullptr, TEXT("[%s] RedMaterial is not Set."), *GetName());
+	checkf(GreenMaterial, TEXT("[%s] GreenMaterial is not Set."), *GetName());
 
 	UStaticMeshComponent* TargetMesh = InMesh;
 	TArray<UMaterialInterface*>MaterialArray = TargetMesh->GetMaterials();
@@ -64,7 +58,7 @@ void ABaseBuildingActor::ChangeMeshMaterialToGreen(UStaticMeshComponent* InMesh)
 
 void ABaseBuildingActor::ChangeMeshMaterialToRed(UStaticMeshComponent* InMesh)
 {
-	checkf(RedMaterial == nullptr, TEXT("[%s] RedMaterial is not Set."), *GetName());
+	checkf(RedMaterial, TEXT("[%s] RedMaterial is not Set."), *GetName());
 
 	UStaticMeshComponent* TargetMesh = InMesh;
 	TArray<UMaterialInterface*>MaterialArray = TargetMesh->GetMaterials();
