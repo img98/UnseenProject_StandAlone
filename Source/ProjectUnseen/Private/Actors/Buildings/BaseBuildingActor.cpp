@@ -45,7 +45,7 @@ void ABaseBuildingActor::BuildCompleted()
 
 void ABaseBuildingActor::ChangeMeshMaterialToGreen(UStaticMeshComponent* InMesh)
 {
-	checkf(GreenMaterial, TEXT("[%s] RedMaterial is not Set."), *GetName());
+	checkf(GreenMaterial, TEXT("[%s] GreenMaterial is not Set."), *GetName());
 
 	UStaticMeshComponent* TargetMesh = InMesh;
 	TArray<UMaterialInterface*>MaterialArray = TargetMesh->GetMaterials();

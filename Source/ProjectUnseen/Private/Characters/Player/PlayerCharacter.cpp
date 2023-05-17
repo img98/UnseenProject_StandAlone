@@ -58,7 +58,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
 	EnhancedInputComponent->BindAction(IA_Movement, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
-	EnhancedInputComponent->BindAction(IA_BuildMenuTrigger, ETriggerEvent::Triggered, this, &APlayerCharacter::BuildMenuTrigger);
 	EnhancedInputComponent->BindAction(IA_Fire, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
 
 
