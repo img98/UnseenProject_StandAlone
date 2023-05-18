@@ -92,12 +92,6 @@ void AGaussTurret::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp,
 	
 }
 
-void AGaussTurret::BuildCompleted()
-{
-	BuildCollision->SetGenerateOverlapEvents(false);
-	TurretState = ETurretState::ETS_Searching;
-}
-
 void AGaussTurret::BeginPlay()
 {
 	Super::BeginPlay();

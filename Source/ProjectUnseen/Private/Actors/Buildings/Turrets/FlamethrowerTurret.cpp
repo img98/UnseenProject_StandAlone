@@ -118,7 +118,3 @@ void AFlamethrowerTurret::BuildCollisionBeginOverlap(UPrimitiveComponent* Overla
 void AFlamethrowerTurret::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 }
-
-void AFlamethrowerTurret::BuildCompleted()
-{
-}

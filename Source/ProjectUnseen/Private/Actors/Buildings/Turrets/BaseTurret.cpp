@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Actors/Projectiles/BaseProjectile.h"
 #include "Components/StatComponent.h"
+#include "Components/BoxComponent.h"
 
 
 ABaseTurret::ABaseTurret()
@@ -168,5 +169,6 @@ void ABaseTurret::FireFieldEndOverlap(UPrimitiveComponent* OverlappedComp, AActo
 
 void ABaseTurret::BuildCompleted()
 {
-	//자식클래스에서 완성하기
+	Super::BuildCompleted();
+	TurretState = ETurretState::ETS_Searching;
 }

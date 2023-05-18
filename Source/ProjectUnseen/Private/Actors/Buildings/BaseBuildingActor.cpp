@@ -13,12 +13,14 @@ ABaseBuildingActor::ABaseBuildingActor()
 	BuildCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BuildCollision"));
 	BuildCollision->SetupAttachment(RootComponent);
 	StatComponent = CreateDefaultSubobject<UStatComponent>(TEXT("Stat Component"));
+	
+	//차라리 모든 StaticMesh의 CollisionProfile을 처음부터 Ignore로 해놓고, BoxComponent로만 콜리젼 관리하는건어떤가? OnBuild시에는 overlap, Build완료후에는 Block으로해서
 }
 
 void ABaseBuildingActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// ! BuildCollison Overlap바인드 자식클래스에서 해줄것!
 
 }
@@ -40,7 +42,7 @@ void ABaseBuildingActor::BuildCollisionEndOverlap(UPrimitiveComponent* Overlappe
 
 void ABaseBuildingActor::BuildCompleted()
 {
-	//TODO:: 설치완료 input이 들어오면 delegate 삭제해주기.
+	BuildCollision->SetGenerateOverlapEvents(false);
 }
 
 void ABaseBuildingActor::ChangeMeshMaterialToGreen(UStaticMeshComponent* InMesh)
