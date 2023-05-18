@@ -90,7 +90,3 @@ void ATeslaTurret::BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedCom
 void ATeslaTurret::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 }
-
-void ATeslaTurret::BuildCompleted()
-{
-}

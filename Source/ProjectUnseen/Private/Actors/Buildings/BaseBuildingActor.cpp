@@ -13,12 +13,24 @@ ABaseBuildingActor::ABaseBuildingActor()
 	BuildCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BuildCollision"));
 	BuildCollision->SetupAttachment(RootComponent);
 	StatComponent = CreateDefaultSubobject<UStatComponent>(TEXT("Stat Component"));
+	
 }
 
 void ABaseBuildingActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//차라리 모든 StaticMesh의 CollisionProfile을 처음부터 Ignore로 해놓고, BoxComponent로만 콜리젼 관리하는건어떤가? OnBuild시에는 overlap, Build완료후에는 Block으로해서
+	TArray<UActorComponent*> ActorComponentArray = GetComponentsByClass(UPrimitiveComponent::StaticClass());
+	for (UActorComponent* EachComponent : ActorComponentArray)
+	{
+		UPrimitiveComponent* EachPrimitiveComponent = Cast<UPrimitiveComponent>(EachComponent);
+		EachPrimitiveComponent->SetCollisionProfileName(TEXT("BuildingPreset"));
+	}
+	BuildCollision->SetCollisionProfileName(TEXT("OverlapAllDynamic")); //나중에 채널파줘야될듯. 일단 임시방편
+	// !! 모든 Primitive컴포넌트들을 생성후에 찾아서 Collision을 바꿔준것인데, 이걸 응용하면 모든 컴포넌트의 material바꾸기도 할수 있지 않을까?
+
+
 	// ! BuildCollison Overlap바인드 자식클래스에서 해줄것!
 
 }
@@ -40,7 +52,8 @@ void ABaseBuildingActor::BuildCollisionEndOverlap(UPrimitiveComponent* Overlappe
 
 void ABaseBuildingActor::BuildCompleted()
 {
-	//TODO:: 설치완료 input이 들어오면 delegate 삭제해주기.
+	BuildCollision->SetGenerateOverlapEvents(false);
+
 }
 
 void ABaseBuildingActor::ChangeMeshMaterialToGreen(UStaticMeshComponent* InMesh)
