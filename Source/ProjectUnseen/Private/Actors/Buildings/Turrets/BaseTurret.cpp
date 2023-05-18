@@ -23,10 +23,7 @@ ABaseTurret::ABaseTurret()
 	RotateGunAnchor->SetupAttachment(TurretGunMesh);
 	FireField = CreateDefaultSubobject<USphereComponent>(TEXT("FireField"));
 	FireField->SetupAttachment(GetRootComponent());
-	
-	TurretRootMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-	TurretBodyMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-	TurretGunMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+
 
 	TurretState = ETurretState::ETS_OnBuild;
 }
@@ -46,7 +43,11 @@ void ABaseTurret::TurretBehaviorStateMachine(float DeltaTime)
 		{
 			FHitResult CurorHitResult;
 			UGameplayStatics::GetPlayerController(this, 0)->GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, CurorHitResult); // 후에 Build용 traceChannel만들어서 바꿀것, traceComplex먼지몰라서 true
-			SetActorLocation(CurorHitResult.Location);
+			
+			float InGridSize = 50.f;
+			FVector BuildPosition = UKismetMathLibrary::Vector_SnappedToGrid(CurorHitResult.Location, InGridSize);
+
+			SetActorLocation(BuildPosition);
 			break;
 		}
 		case ETurretState::ETS_Searching:
@@ -171,4 +172,6 @@ void ABaseTurret::BuildCompleted()
 {
 	Super::BuildCompleted();
 	TurretState = ETurretState::ETS_Searching;
+
+	FireField->SetCollisionProfileName(TEXT("OverlapAllDynamic")); //건설 완료시 공격범위 profile다시 설정해주기
 }
