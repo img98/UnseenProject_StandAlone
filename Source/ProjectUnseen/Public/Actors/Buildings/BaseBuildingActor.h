@@ -44,7 +44,7 @@ protected:
 	UFUNCTION()
 	virtual void BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	UFUNCTION()
-	void BuildCompleted();
+	virtual void BuildCompleted();
 	UFUNCTION(BlueprintCallable)
 	virtual void ChangeMeshMaterialToGreen(UStaticMeshComponent* InMesh);
 	UFUNCTION(BlueprintCallable)
