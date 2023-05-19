@@ -20,17 +20,25 @@ void ABaseBuildingActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//차라리 모든 StaticMesh의 CollisionProfile을 처음부터 Ignore로 해놓고, BoxComponent로만 콜리젼 관리하는건어떤가? OnBuild시에는 overlap, Build완료후에는 Block으로해서
-	TArray<UActorComponent*> ActorComponentArray = GetComponentsByClass(UPrimitiveComponent::StaticClass());
-	for (UActorComponent* EachComponent : ActorComponentArray)
+	BuildCollision->OnComponentBeginOverlap.AddDynamic(this, &ABaseBuildingActor::BuildCollisionBeginOverlap); //constructor에 넣으면 작동안하더라
+	BuildCollision->OnComponentEndOverlap.AddDynamic(this, &ABaseBuildingActor::BuildCollisionEndOverlap);
+
+	/** Collision이 존재하는 모든 컴포넌트 추출 후 CollisionProfile 변경 */
+	TArray<UActorComponent*> CollisionArray = GetComponentsByClass(UPrimitiveComponent::StaticClass());
+	for (UActorComponent* EachComponent : CollisionArray)
 	{
 		UPrimitiveComponent* EachPrimitiveComponent = Cast<UPrimitiveComponent>(EachComponent);
 		EachPrimitiveComponent->SetCollisionProfileName(TEXT("BuildingPreset"));
 	}
 	BuildCollision->SetCollisionProfileName(TEXT("OverlapAllDynamic")); //나중에 채널파줘야될듯. 일단 임시방편
-	// !! 모든 Primitive컴포넌트들을 생성후에 찾아서 Collision을 바꿔준것인데, 이걸 응용하면 모든 컴포넌트의 material바꾸기도 할수 있지 않을까?
 
-
+	/** build시작 시, 초록색 material로 변경*/
+	TArray<UActorComponent*> StaticMeshArray = GetComponentsByClass(UStaticMeshComponent::StaticClass());
+	for (UActorComponent* EachComponent : StaticMeshArray)
+	{
+		UStaticMeshComponent* EachStaticMeshComponent = Cast<UStaticMeshComponent>(EachComponent);
+		ChangeMeshMaterialToGreen(EachStaticMeshComponent);
+	}
 	// ! BuildCollison Overlap바인드 자식클래스에서 해줄것!
 
 }
@@ -44,10 +52,23 @@ void ABaseBuildingActor::Tick(float DeltaTime)
 void ABaseBuildingActor::BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//TODO:: 모든Mesh들을 ChangeMeshMaterialToRed(InMesh) 사용해주기
+	TArray<UActorComponent*> ActorComponentArray = GetComponentsByClass(UStaticMeshComponent::StaticClass());
+	for (UActorComponent* EachComponent : ActorComponentArray)
+	{
+		UStaticMeshComponent* EachStaticMeshComponent = Cast<UStaticMeshComponent>(EachComponent);
+		ChangeMeshMaterialToRed(EachStaticMeshComponent);
+	}
 }
+
 void ABaseBuildingActor::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	//TODO:: 모든Mesh들을 ChangeMeshMaterialToGreen(InMesh) 사용해주기
+	TArray<UActorComponent*> ActorComponentArray = GetComponentsByClass(UStaticMeshComponent::StaticClass());
+	for (UActorComponent* EachComponent : ActorComponentArray)
+	{
+		UStaticMeshComponent* EachStaticMeshComponent = Cast<UStaticMeshComponent>(EachComponent);
+		ChangeMeshMaterialToGreen(EachStaticMeshComponent);
+	}
 }
 
 void ABaseBuildingActor::BuildCompleted()

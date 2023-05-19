@@ -90,24 +90,6 @@ void ABaseTurret::BeginPlay()
 
 }
 
-void ABaseTurret::BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	Super::BuildCollisionBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-
-	ChangeMeshMaterialToRed(TurretRootMesh);
-	ChangeMeshMaterialToRed(TurretBodyMesh);
-	ChangeMeshMaterialToRed(TurretGunMesh);
-}
-
-void ABaseTurret::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	Super::BuildCollisionEndOverlap(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
-
-	ChangeMeshMaterialToGreen(TurretRootMesh);
-	ChangeMeshMaterialToGreen(TurretBodyMesh);
-	ChangeMeshMaterialToGreen(TurretGunMesh);
-}
-
 void ABaseTurret::RotateTurret()
 {
 	// TODO: 의미없이 빙빙돌기 구현하기 or 고개숙이고 대기하기 구현

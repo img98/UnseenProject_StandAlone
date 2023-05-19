@@ -69,34 +69,8 @@ void AGaussTurret::CoolingGunFever(float DeltaTime)
 	HotMetal->SetScalarParameterValueOnMaterials(FName(TEXT("Intensity")), HotMetal_Intensity);
 }
 
-void AGaussTurret::BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	Super::BuildCollisionBeginOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-
-	ChangeMeshMaterialToRed(TurretRootMesh);
-	ChangeMeshMaterialToRed(TurretBodyMesh);
-	ChangeMeshMaterialToRed(TurretGunMesh);
-
-	ChangeMeshMaterialToRed(HotMetal);
-}
-
-void AGaussTurret::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	Super::BuildCollisionEndOverlap(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
-
-	ChangeMeshMaterialToGreen(TurretRootMesh);
-	ChangeMeshMaterialToGreen(TurretBodyMesh);
-	ChangeMeshMaterialToGreen(TurretGunMesh);
-
-	ChangeMeshMaterialToGreen(HotMetal);
-	
-}
-
 void AGaussTurret::BeginPlay()
 {
 	Super::BeginPlay();
-
-	BuildCollision->OnComponentBeginOverlap.AddDynamic(this, &AGaussTurret::BuildCollisionBeginOverlap); //constructor에 넣으면 작동안하더라
-	BuildCollision->OnComponentEndOverlap.AddDynamic(this, &AGaussTurret::BuildCollisionEndOverlap);
 }
 

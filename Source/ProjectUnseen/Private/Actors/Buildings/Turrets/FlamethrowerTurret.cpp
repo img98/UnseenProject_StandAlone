@@ -110,11 +110,3 @@ void AFlamethrowerTurret::SetTurretActivation(bool bBool)
 		LoopingFiresound->Deactivate();
 	}
 }
-
-void AFlamethrowerTurret::BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-}
-
-void AFlamethrowerTurret::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-}
