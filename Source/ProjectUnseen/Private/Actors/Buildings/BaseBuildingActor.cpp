@@ -33,12 +33,8 @@ void ABaseBuildingActor::BeginPlay()
 	BuildCollision->SetCollisionProfileName(TEXT("OverlapAllDynamic")); //나중에 채널파줘야될듯. 일단 임시방편
 
 	/** build시작 시, 초록색 material로 변경*/
-	TArray<UActorComponent*> StaticMeshArray = GetComponentsByClass(UStaticMeshComponent::StaticClass());
-	for (UActorComponent* EachComponent : StaticMeshArray)
-	{
-		UStaticMeshComponent* EachStaticMeshComponent = Cast<UStaticMeshComponent>(EachComponent);
-		ChangeMeshMaterialToGreen(EachStaticMeshComponent);
-	}
+	SetAllOverlayMaterials(GreenMaterial);
+
 	// ! BuildCollison Overlap바인드 자식클래스에서 해줄것!
 
 }
@@ -52,28 +48,31 @@ void ABaseBuildingActor::Tick(float DeltaTime)
 void ABaseBuildingActor::BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//TODO:: 모든Mesh들을 ChangeMeshMaterialToRed(InMesh) 사용해주기
-	TArray<UActorComponent*> ActorComponentArray = GetComponentsByClass(UStaticMeshComponent::StaticClass());
-	for (UActorComponent* EachComponent : ActorComponentArray)
-	{
-		UStaticMeshComponent* EachStaticMeshComponent = Cast<UStaticMeshComponent>(EachComponent);
-		ChangeMeshMaterialToRed(EachStaticMeshComponent);
-	}
+	SetAllOverlayMaterials(RedMaterial);
 }
 
 void ABaseBuildingActor::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	//TODO:: 모든Mesh들을 ChangeMeshMaterialToGreen(InMesh) 사용해주기
-	TArray<UActorComponent*> ActorComponentArray = GetComponentsByClass(UStaticMeshComponent::StaticClass());
-	for (UActorComponent* EachComponent : ActorComponentArray)
-	{
-		UStaticMeshComponent* EachStaticMeshComponent = Cast<UStaticMeshComponent>(EachComponent);
-		ChangeMeshMaterialToGreen(EachStaticMeshComponent);
-	}
+	SetAllOverlayMaterials(GreenMaterial);
 }
 
 void ABaseBuildingActor::BuildCompleted()
 {
-	BuildCollision->SetGenerateOverlapEvents(false);
+	// ! 나중에 BuildCollision으로 히트판정 처리할거면 true로 바꿔야함!
+	BuildCollision->SetGenerateOverlapEvents(false); 
+
+	SetAllOverlayMaterials(nullptr);
+}
+
+void ABaseBuildingActor::SetAllOverlayMaterials(UMaterialInterface* InMaterial)
+{
+	TArray<UActorComponent*> ActorComponentArray = GetComponentsByClass(UStaticMeshComponent::StaticClass());
+	for (UActorComponent* EachComponent : ActorComponentArray)
+	{
+		UStaticMeshComponent* EachStaticMeshComponent = Cast<UStaticMeshComponent>(EachComponent);
+		EachStaticMeshComponent->SetOverlayMaterial(InMaterial); //overlay material 비우기
+	}
 
 }
 
