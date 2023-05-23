@@ -49,6 +49,8 @@ protected:
 	virtual void ChangeMeshMaterialToGreen(UStaticMeshComponent* InMesh);
 	UFUNCTION(BlueprintCallable)
 	virtual void ChangeMeshMaterialToRed(UStaticMeshComponent* InMesh);
+	UFUNCTION()
+	void SetAllOverlayMaterials(UMaterialInterface* InMaterial);
 
 public:	
 	FORCEINLINE UStatComponent* GetStatComponent() { return StatComponent; }

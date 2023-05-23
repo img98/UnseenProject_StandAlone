@@ -24,7 +24,6 @@ ABaseTurret::ABaseTurret()
 	FireField = CreateDefaultSubobject<USphereComponent>(TEXT("FireField"));
 	FireField->SetupAttachment(GetRootComponent());
 
-
 	TurretState = ETurretState::ETS_OnBuild;
 }
 
@@ -87,7 +86,6 @@ void ABaseTurret::BeginPlay()
 
 	FireField->OnComponentBeginOverlap.AddDynamic(this, &ABaseTurret::FireFieldBeginOverlap);
 	FireField->OnComponentEndOverlap.AddDynamic(this, &ABaseTurret::FireFieldEndOverlap);
-
 }
 
 void ABaseTurret::RotateTurret()
