@@ -34,8 +34,8 @@ void ABaseBuildingActor::BeginPlay()
 
 	/** build시작 시, 초록색 material로 변경*/
 	SetAllOverlayMaterials(GreenMaterial);
+	// Build 가능한 위치인지를 표시하는 property 하나 만들어줘야겠다.
 
-	// ! BuildCollison Overlap바인드 자식클래스에서 해줄것!
 
 }
 
