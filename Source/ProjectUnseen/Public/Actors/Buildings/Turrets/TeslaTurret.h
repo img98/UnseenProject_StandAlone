@@ -1,17 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Actors/Buildings/Turrets/BaseTurret.h"
-#include "GaussTurret.generated.h"
+#include "TeslaTurret.generated.h"
+
+class UNiagaraComponent;
 
 UCLASS()
-class PROJECTUNSEEN_API AGaussTurret : public ABaseTurret
+class PROJECTUNSEEN_API ATeslaTurret : public ABaseTurret
 {
 	GENERATED_BODY()
-	
+
 public:
-	AGaussTurret();
+	ATeslaTurret();
 
 	virtual void Fire() override;
 
@@ -21,20 +24,27 @@ public:
 
 	void CoolingGunFever(float DeltaTime);
 
+
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere)
-	USceneComponent* ProjectileSpawner;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* HotMetal;
 	UPROPERTY()
 	float HotMetal_Intensity;
 	UPROPERTY()
-	float GunFever=6.f;
+	float GunFever = 2.f;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	USceneComponent* ProjectileSpawner;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
+	UNiagaraComponent* TeslaFx;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
-	TSubclassOf<ABaseProjectile> ProjectileClass;
+	USoundBase* HitSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
+	UParticleSystem* HitParticle;
+
+	//No TeslaBeam Particle
 
 private:
 

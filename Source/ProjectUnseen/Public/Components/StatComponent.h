@@ -10,6 +10,7 @@
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECTUNSEEN_API UStatComponent : public UActorComponent
 {
+
 	GENERATED_BODY()
 
 public:	
@@ -25,29 +26,34 @@ private:
 
 // Stats
 	UPROPERTY(VisibleAnywhere)
-	float _MaxHP = 0.f;
+	float MaxHP;
 	UPROPERTY(VisibleAnywhere)
-	float _CurrentHP = 0.f;
+	float CurrentHP;
 	UPROPERTY(VisibleAnywhere)
-	float _AttackDamage = 0.f;
+	float AttackDamage;
 	UPROPERTY(VisibleAnywhere)
-	float _AttackSpeed = 0.f;
+	float AttackSpeed;
 	UPROPERTY(VisibleAnywhere)
-	float _MovementSpeed = 0.f;
+	float MovementSpeed;
 
 public:
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
+	float GetHPRatio();
+	
+	UFUNCTION(BlueprintCallable)
 	void SetStats(float InMaxHP, float InAttackDamage, float InAttackSpeed, float InMovementSpeed);
 
-	FORCEINLINE float GetCurrentHP() { return _CurrentHP; }
-	FORCEINLINE void SetCurrentHP(float InCurrentHP) { _CurrentHP = InCurrentHP; }
-	FORCEINLINE float GetMaxHP() { return _MaxHP; }
-	FORCEINLINE void SetMaxHP(float InMaxHP) { _MaxHP = InMaxHP; }
-	FORCEINLINE float GetAttackDamage() { return _AttackDamage; }
-	FORCEINLINE void SetAttackDamage(float InAttackDamage) { _AttackDamage = InAttackDamage; }
-	FORCEINLINE float GetAttackSpeed() { return _AttackSpeed; }
-	FORCEINLINE void SetAttackSpeed(float InAttackSpeed) { _AttackSpeed = InAttackSpeed; }
-	FORCEINLINE float GetMovementSpeed() { return _MovementSpeed; }
-	FORCEINLINE void SetMovementSpeed(float InMovementSpeed) { _MovementSpeed = InMovementSpeed; }
+	FORCEINLINE float GetCurrentHP() { return CurrentHP; }
+	FORCEINLINE void SetCurrentHP(float InCurrentHP) { CurrentHP = InCurrentHP; }
+	FORCEINLINE void IncreaseCurrentHP(float InHP) { CurrentHP = (CurrentHP + InHP) < MaxHP ? CurrentHP + InHP : MaxHP; }
+	FORCEINLINE void DecreaseCurrentHP(float InHP) { CurrentHP = (CurrentHP - InHP) > 0 ? CurrentHP - InHP : 0; }
+	FORCEINLINE float GetMaxHP() { return MaxHP; }
+	FORCEINLINE void SetMaxHP(float InMaxHP) { MaxHP = InMaxHP; }
+	FORCEINLINE float GetAttackDamage() { return AttackDamage; }
+	FORCEINLINE void SetAttackDamage(float InAttackDamage) { AttackDamage = InAttackDamage; }
+	FORCEINLINE float GetAttackSpeed() { return AttackSpeed; }
+	FORCEINLINE void SetAttackSpeed(float InAttackSpeed) { AttackSpeed = InAttackSpeed; }
+	FORCEINLINE float GetMovementSpeed() { return MovementSpeed; }
+	FORCEINLINE void SetMovementSpeed(float InMovementSpeed) { MovementSpeed = InMovementSpeed; }
 };

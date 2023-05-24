@@ -31,7 +31,13 @@ void UStatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 void UStatComponent::SetStats(float InMaxHP, float InAttackDamage, float InAttackSpeed, float InMovementSpeed)
 {
 	SetMaxHP(InMaxHP);
-	SetAttackSpeed(InAttackDamage);
+	SetCurrentHP(InMaxHP);
+	SetAttackDamage(InAttackDamage);
 	SetAttackSpeed(InAttackSpeed);
 	SetMovementSpeed(InMovementSpeed);
+}
+
+float UStatComponent::GetHPRatio()
+{
+	return CurrentHP / MaxHP;
 }

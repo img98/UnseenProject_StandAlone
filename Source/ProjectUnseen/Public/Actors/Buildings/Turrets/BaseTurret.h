@@ -11,6 +11,7 @@
 
 class USphereComponent;
 class AEnemyCharacter;
+class ABaseProjectile;
 
 UCLASS()
 class PROJECTUNSEEN_API ABaseTurret : public ABaseBuildingActor, public ITurretInterface
@@ -23,30 +24,50 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void TurretBehaviorStateMachine(float DeltaTime);
+
 protected:
 	virtual void BeginPlay() override;
 
-	ETurretState TurretState = ETurretState::ETS_MAX;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	USceneComponent* Root;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	// ÅÍ·¿ ÄÄÆ÷³ÍÆ® ±¸Á¶
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* TurretRootMesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* TurretBodyMesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* TurretGunMesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* RotateGunAnchor;
+	UPROPERTY(VisibleAnywhere)
 	USphereComponent* FireField;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	//ÅÍ·¿ º° projectile ±¸¼º¹°
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
+	UParticleSystem* MuzzleParticle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
+	USoundBase* FireSound;
+
+	//ÅÍ·¿ ÇÁ·ÎÆÛÆ¼
+	FTimerHandle FireTimer;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	ETurretState TurretState = ETurretState::ETS_MAX;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<AEnemyCharacter*> EnemyArray;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float RotateInterpSpeed = 10.f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bCanFire = true;
 
 	UFUNCTION()
 	FORCEINLINE void SetTurretState(ETurretState InState) { TurretState = InState; };
 
+	virtual void BuildCompleted() override;
+
 	UFUNCTION()
 	void RotateTurret();
+	UFUNCTION()
+	void LookAtEnemy(float DeltaTime);
 
 	UFUNCTION()
 	virtual void FireFieldBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -55,11 +76,9 @@ protected:
 
 	UFUNCTION()
 	virtual void Fire();
+	UFUNCTION()
+	virtual void FireDelay(float DeltaTime);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool bCanFire;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	float FireSpeed;
 
 private:
 

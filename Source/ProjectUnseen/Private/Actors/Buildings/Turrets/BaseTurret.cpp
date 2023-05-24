@@ -5,51 +5,78 @@
 #include "Components/SphereComponent.h"
 #include "Characters/Enemy/EnemyCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Actors/Projectiles/BaseProjectile.h"
+#include "Components/StatComponent.h"
+#include "Components/BoxComponent.h"
+
 
 ABaseTurret::ABaseTurret()
 {
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	SetRootComponent(Root);
 	TurretRootMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretRootMesh"));
 	TurretRootMesh->SetupAttachment(Root);
 	TurretBodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretBodyMesh"));
 	TurretBodyMesh->SetupAttachment(TurretRootMesh);
 	TurretGunMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretGunMesh"));
 	TurretGunMesh->SetupAttachment(TurretBodyMesh);
+	RotateGunAnchor = CreateDefaultSubobject<USceneComponent>(TEXT("RotateGunAnchor"));
+	RotateGunAnchor->SetupAttachment(TurretGunMesh);
 	FireField = CreateDefaultSubobject<USphereComponent>(TEXT("FireField"));
 	FireField->SetupAttachment(GetRootComponent());
-	
-	TurretRootMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-	TurretBodyMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-	TurretGunMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 
-	TurretState = ETurretState::ETS_Searching;
+	TurretState = ETurretState::ETS_OnBuild;
 }
 
 void ABaseTurret::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	TurretBehaviorStateMachine(DeltaTime);
+}
+
+void ABaseTurret::TurretBehaviorStateMachine(float DeltaTime)
+{
 	switch (TurretState)
 	{
-	case ETurretState::ETS_NonCombat:
-		break;
-
-	case ETurretState::ETS_Searching:
-		RotateTurret();
-		break;
-
-	case ETurretState::ETS_InCombat:
-		if (EnemyArray.Num() < 1)
+		case ETurretState::ETS_OnBuild:
 		{
-			SetTurretState(ETurretState::ETS_Searching);
-		}
-		Fire();
-		break;
+			FHitResult CurorHitResult;
+			UGameplayStatics::GetPlayerController(this, 0)->GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, CurorHitResult); // 후에 Build용 traceChannel만들어서 바꿀것, traceComplex먼지몰라서 true
+			
+			float InGridSize = 50.f;
+			FVector BuildPosition = UKismetMathLibrary::Vector_SnappedToGrid(CurorHitResult.Location, InGridSize);
 
-	default:
-		UE_LOG(LogTemp, Warning, TEXT("[%s] TurretState is Default!"),*GetName());
-		break;
+			SetActorLocation(BuildPosition);
+			break;
+		}
+		case ETurretState::ETS_Searching:
+		{
+			RotateTurret();
+			if (EnemyArray.Num() > 0)
+			{
+				SetTurretState(ETurretState::ETS_InCombat);
+			}
+			break;
+		}
+		case ETurretState::ETS_InCombat:
+		{
+			LookAtEnemy(DeltaTime);
+			if (EnemyArray.Num() < 1)
+			{
+				SetTurretState(ETurretState::ETS_Searching);
+			}
+			if (bCanFire)
+			{
+				Fire();
+				FireDelay(DeltaTime);
+			}
+			break;
+		}
+		default:
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[%s] TurretState is Default!"), *GetName());
+			break;
+		}
 	}
 }
 
@@ -59,27 +86,48 @@ void ABaseTurret::BeginPlay()
 
 	FireField->OnComponentBeginOverlap.AddDynamic(this, &ABaseTurret::FireFieldBeginOverlap);
 	FireField->OnComponentEndOverlap.AddDynamic(this, &ABaseTurret::FireFieldEndOverlap);
-
 }
 
 void ABaseTurret::RotateTurret()
 {
+	// TODO: 의미없이 빙빙돌기 구현하기 or 고개숙이고 대기하기 구현
+}
+
+void ABaseTurret::LookAtEnemy(float DeltaTIme)
+{
 	if (!EnemyArray.IsValidIndex(0)) return; //이걸 안해주니까 시작하자마자 크래쉬나더라
+
 	AEnemyCharacter* Target = EnemyArray[0];
 	if (Target == nullptr) return;
 
-	FRotator LookTargetRotator = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target->GetActorLocation());
-	TurretBodyMesh->SetWorldRotation(FRotator(0.f, LookTargetRotator.Yaw, 0.f));
-	TurretGunMesh->SetRelativeRotation(FRotator(LookTargetRotator.Pitch, 0.f, 0.f));
-	//아직 GunMesh의 각도가 어색한 감이 적잖이 있다. 이점은 후에 다시 점검해보자.
+	const FRotator LookTargetRotator = UKismetMathLibrary::FindLookAtRotation(RotateGunAnchor->GetComponentLocation(), Target->GetActorLocation());
+	const FRotator InterpTargetRotator = UKismetMathLibrary::RInterpTo(RotateGunAnchor->GetComponentRotation(), LookTargetRotator, DeltaTIme, RotateInterpSpeed);
+	TurretBodyMesh->SetWorldRotation(FRotator(0.f, InterpTargetRotator.Yaw, 0.f));
+	TurretGunMesh->SetRelativeRotation(FRotator(InterpTargetRotator.Pitch, 0.f, 0.f));
 
-	//TODO::Fire 위치도 옮기고 일단은 스프린트를 위한 코드
-	Fire();
+	// TODO : Rotate가 현위치에서 목적지까지 부드럽게 움직이는 방법을 고안해보자.
+
 }
 
 void ABaseTurret::Fire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("[%s] Fire함수의 재정의가 이루어지지 않았습니다. 자식Class에서 정의해주세요"), *GetName());
+
+	bCanFire = false;
+}
+
+void ABaseTurret::FireDelay(float DeltaTime)
+{
+	GetWorld()->GetTimerManager().SetTimer(
+		FireTimer,
+		FTimerDelegate::CreateLambda([&]() {
+			//TODO : Just Wait for 'Firespeed' seconds & ClearTimer
+			bCanFire = true;
+			GetWorld()->GetTimerManager().ClearTimer(FireTimer);
+			}),
+		StatComponent->GetAttackSpeed(),
+		false
+	);
 }
 
 void ABaseTurret::FireFieldBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -89,7 +137,6 @@ void ABaseTurret::FireFieldBeginOverlap(UPrimitiveComponent* OverlappedComponent
 	if (EnemyCharacter == nullptr) return;
 
 	EnemyArray.Emplace(EnemyCharacter);
-	UE_LOG(LogTemp, Warning, TEXT("Added!"));
 }
 
 void ABaseTurret::FireFieldEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -99,5 +146,12 @@ void ABaseTurret::FireFieldEndOverlap(UPrimitiveComponent* OverlappedComp, AActo
 	if (EnemyCharacter == nullptr) return;
 
 	EnemyArray.Remove(EnemyCharacter);
-	UE_LOG(LogTemp, Warning, TEXT("Removed!"));
+}
+
+void ABaseTurret::BuildCompleted()
+{
+	Super::BuildCompleted();
+	TurretState = ETurretState::ETS_Searching;
+
+	FireField->SetCollisionProfileName(TEXT("OverlapAllDynamic")); //건설 완료시 공격범위 profile다시 설정해주기
 }

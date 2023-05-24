@@ -8,6 +8,7 @@
 
 class USphereComponent;
 class UProjectileMovementComponent;
+class ABaseTurret;
 
 UCLASS()
 class PROJECTUNSEEN_API ABaseProjectile : public AActor
@@ -20,14 +21,25 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, Category = ClassSetup)
+	UPROPERTY(VisibleAnywhere)
 	USphereComponent* SphereCollision;
-	UPROPERTY(VisibleAnywhere, Category = ClassSetup)
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BulletMesh;
-	UPROPERTY(VisibleAnywhere, Category = ClassSetup)
+	UPROPERTY(VisibleAnywhere)
 	UProjectileMovementComponent* ProjectileMovementComponent;
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
+
+	UPROPERTY(EditAnywhere, Category = "CustomClassSetup")
+	USoundBase* HitSound;
+	UPROPERTY(EditAnywhere, Category = "CustomClassSetup")
+	UParticleSystem* HitParticle;
+	UPROPERTY(VisibleAnywhere, Category = "CustomClassSetup")
+	ABaseTurret* ParentTurret;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
 
+	FORCEINLINE void SetParnetTurret(ABaseTurret* InParentTurret) { ParentTurret = InParentTurret; }
 };
