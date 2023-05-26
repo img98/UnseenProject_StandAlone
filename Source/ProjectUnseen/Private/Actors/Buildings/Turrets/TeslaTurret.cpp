@@ -8,6 +8,8 @@
 #include "NiagaraComponent.h"
 #include "Characters/Enemy/EnemyCharacter.h"
 
+#include "Components/SphereComponent.h"
+
 ATeslaTurret::ATeslaTurret()
 {
 	HotMetal = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HotMetal"));
@@ -81,4 +83,8 @@ void ATeslaTurret::CoolingGunFever(float DeltaTime)
 void ATeslaTurret::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//스프린트위한 임시코드 (종료후 꼭! 삭제할것)  + include SphereComponent도 제거
+	TurretState = ETurretState::ETS_Searching;
+	FireField->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 }
