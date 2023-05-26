@@ -61,6 +61,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* IA_BuildMenuTrigger;
 
+
 	void Move(const FInputActionValue& Value);
 
 	void LookCursorDirection();
@@ -68,7 +69,14 @@ protected:
 	void Fire();
 
 	UFUNCTION(BlueprintCallable)
-	void BuildMenuTrigger();
+	void BuildMenuTrigger(UInputMappingContext* InIMC);
+
+	UFUNCTION(BlueprintCallable)
+	void BuildStart(UClass* InBuildingRef);
+	UFUNCTION(BlueprintCallable)
+	void BuildComplete();
+	UPROPERTY()
+	AActor* HoldingActor;
 
 private:
 

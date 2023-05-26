@@ -10,6 +10,8 @@
 #include "Components/AudioComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 
+#include "Components/SphereComponent.h"
+
 AFlamethrowerTurret::AFlamethrowerTurret()
 {
 	ProjectileSpawner = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSpawner"));
@@ -95,6 +97,10 @@ void AFlamethrowerTurret::TurretBehaviorStateMachine(float DeltaTime)
 void AFlamethrowerTurret::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//스프린트위한 임시코드 (종료후 꼭! 삭제할것) + include SphereComponent도 제거
+	TurretState = ETurretState::ETS_Searching;
+	FireField->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 }
 
 void AFlamethrowerTurret::SetTurretActivation(bool bBool)

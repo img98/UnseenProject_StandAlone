@@ -10,6 +10,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/StatComponent.h"
 
+#include "Actors/Buildings/Turrets/BaseTurret.h"
+
 APlayerCharacter::APlayerCharacter()
 {
 
@@ -60,6 +62,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	EnhancedInputComponent->BindAction(IA_Movement, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
 	EnhancedInputComponent->BindAction(IA_Fire, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
 
+	// IMC_Build
+	EnhancedInputComponent->BindAction(IA_Fire, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
+
 
 }
 
@@ -102,7 +107,46 @@ void APlayerCharacter::Fire()
 	UE_LOG(LogTemp, Warning, TEXT("Player Fire!"));
 }
 
-void APlayerCharacter::BuildMenuTrigger()
+void APlayerCharacter::BuildMenuTrigger(UInputMappingContext* InIMC)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Build Action Trigger activated!"));
+
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	{
+		Subsystem->ClearAllMappings();
+		Subsystem->AddMappingContext(InIMC, 0);
+	}
+}
+
+void APlayerCharacter::BuildStart(UClass* InBuildingRef)
+{
+	if (!InBuildingRef)
+	{
+		return;
+	}
+
+	if (!IsValid(HoldingActor))
+	{
+		HoldingActor = GetWorld()->SpawnActor<AActor>(InBuildingRef, FTransform());
+	}
+
+
+}
+
+void APlayerCharacter::BuildComplete()
+{
+
+	ABaseTurret* HoldingTurret = Cast<ABaseTurret>(HoldingActor);
+		
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	{
+		Subsystem->ClearAllMappings();
+		Subsystem->AddMappingContext(IMC_PlayerCombat, 0);
+	}
+
+	//TurretState = ETurretState::ETS_OnBuild;
+	HoldingTurret->ETurretState = ETurretState::ETS_Searching; //protected라서 접근이 안된다. 나중에 Getter만들어주자
+
+	HoldingTurret = nullptr;
+	HoldingActor = nullptr;
 }
