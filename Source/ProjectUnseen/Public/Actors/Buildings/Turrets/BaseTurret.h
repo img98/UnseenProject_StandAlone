@@ -26,6 +26,8 @@ public:
 
 	virtual void TurretBehaviorStateMachine(float DeltaTime);
 
+	virtual void BuildCompleted() override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -61,8 +63,6 @@ protected:
 
 	UFUNCTION()
 	FORCEINLINE void SetTurretState(ETurretState InState) { TurretState = InState; };
-
-	virtual void BuildCompleted() override;
 
 	UFUNCTION()
 	void RotateTurret();
