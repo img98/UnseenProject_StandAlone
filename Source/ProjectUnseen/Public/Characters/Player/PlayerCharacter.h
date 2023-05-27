@@ -53,13 +53,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputMappingContext* IMC_PlayerCombat;
 	UPROPERTY(EditAnywhere, Category = Input)
-	UInputMappingContext* IMC_PlayerBuildMenu;
-	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* IA_Movement;
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* IA_Fire;
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* IA_BuildMenuTrigger;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputMappingContext* IMC_PlayerBuildMenu;
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* IA_BuildComplete;
 
 
 	void Move(const FInputActionValue& Value);

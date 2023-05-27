@@ -59,12 +59,12 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
+	// IMC_PlayerCombat
 	EnhancedInputComponent->BindAction(IA_Movement, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
 	EnhancedInputComponent->BindAction(IA_Fire, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
 
 	// IMC_Build
-	EnhancedInputComponent->BindAction(IA_Fire, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
-
+	EnhancedInputComponent->BindAction(IA_BuildComplete, ETriggerEvent::Triggered, this, &APlayerCharacter::BuildComplete);
 
 }
 
@@ -129,23 +129,25 @@ void APlayerCharacter::BuildStart(UClass* InBuildingRef)
 	{
 		HoldingActor = GetWorld()->SpawnActor<AActor>(InBuildingRef, FTransform());
 	}
-
-
 }
 
 void APlayerCharacter::BuildComplete()
 {
+	if (!IsValid(HoldingActor))
+	{
+		return;
+	}
 
-	ABaseTurret* HoldingTurret = Cast<ABaseTurret>(HoldingActor);
-		
+	UE_LOG(LogTemp, Warning, TEXT("BuildComplete"));
+
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 	{
 		Subsystem->ClearAllMappings();
 		Subsystem->AddMappingContext(IMC_PlayerCombat, 0);
 	}
 
-	//TurretState = ETurretState::ETS_OnBuild;
-	HoldingTurret->ETurretState = ETurretState::ETS_Searching; //protected라서 접근이 안된다. 나중에 Getter만들어주자
+	ABaseTurret* HoldingTurret = Cast<ABaseTurret>(HoldingActor); //나중에 기반시설 만들면 ABaseTurret으로 cast하면 안될텐데?
+	HoldingTurret->BuildCompleted();
 
 	HoldingTurret = nullptr;
 	HoldingActor = nullptr;
