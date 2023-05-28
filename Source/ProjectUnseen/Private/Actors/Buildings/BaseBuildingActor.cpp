@@ -35,8 +35,6 @@ void ABaseBuildingActor::BeginPlay()
 	/** build시작 시, 초록색 material로 변경*/
 	SetAllOverlayMaterials(GreenMaterial);
 	// Build 가능한 위치인지를 표시하는 property 하나 만들어줘야겠다.
-
-
 }
 
 void ABaseBuildingActor::Tick(float DeltaTime)
@@ -47,20 +45,20 @@ void ABaseBuildingActor::Tick(float DeltaTime)
 
 void ABaseBuildingActor::BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//TODO:: 모든Mesh들을 ChangeMeshMaterialToRed(InMesh) 사용해주기
 	SetAllOverlayMaterials(RedMaterial);
+	CurrentBuildState = EBuildState::EBS_OnBuildRed;
 }
 
 void ABaseBuildingActor::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	//TODO:: 모든Mesh들을 ChangeMeshMaterialToGreen(InMesh) 사용해주기
 	SetAllOverlayMaterials(GreenMaterial);
+	CurrentBuildState = EBuildState::EBS_OnBuildGreen;
 }
 
 void ABaseBuildingActor::BuildCompleted()
 {
-	// ! 나중에 BuildCollision으로 히트판정 처리할거면 true로 바꿔야함!
-	BuildCollision->SetGenerateOverlapEvents(false); 
+	BuildCollision->SetGenerateOverlapEvents(false);
+	CurrentBuildState = EBuildState::EBS_BuildCompleted;
 
 	SetAllOverlayMaterials(nullptr);
 }
@@ -73,7 +71,6 @@ void ABaseBuildingActor::SetAllOverlayMaterials(UMaterialInterface* InMaterial)
 		UStaticMeshComponent* EachStaticMeshComponent = Cast<UStaticMeshComponent>(EachComponent);
 		EachStaticMeshComponent->SetOverlayMaterial(InMaterial); //overlay material 비우기
 	}
-
 }
 
 void ABaseBuildingActor::ChangeMeshMaterialToGreen(UStaticMeshComponent* InMesh)

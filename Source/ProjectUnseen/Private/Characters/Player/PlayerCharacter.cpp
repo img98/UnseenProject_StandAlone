@@ -99,23 +99,12 @@ void APlayerCharacter::LookCursorDirection()
 	const FRotator CharacterLookRotator = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), HitResult.Location);
 	const FRotator TargetRotator(0.f, CharacterLookRotator.Yaw, 0.f);
 	this->SetActorRotation(TargetRotator);
-	//다만, 이경우 고저차가 있는곳위로 커서가 움직일때 Jerking현상이 있더라. Interp등으로 나중에 보완해야될듯
+	//다만, 이경우 고저차가 있는곳위로 커서가 움직일때 Jerking현상이 있더라. Lerp등으로 나중에 보완해야될듯
 }
 
 void APlayerCharacter::Fire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Player Fire!"));
-}
-
-void APlayerCharacter::BuildMenuTrigger(UInputMappingContext* InIMC)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Build Action Trigger activated!"));
-
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-	{
-		Subsystem->ClearAllMappings();
-		Subsystem->AddMappingContext(InIMC, 0);
-	}
 }
 
 void APlayerCharacter::BuildStart(UClass* InBuildingRef)
@@ -129,6 +118,12 @@ void APlayerCharacter::BuildStart(UClass* InBuildingRef)
 	{
 		HoldingActor = GetWorld()->SpawnActor<AActor>(InBuildingRef, FTransform());
 	}
+
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	{
+		Subsystem->ClearAllMappings();
+		Subsystem->AddMappingContext(IMC_PlayerBuildMenu, 0);
+	}
 }
 
 void APlayerCharacter::BuildComplete()
@@ -137,18 +132,22 @@ void APlayerCharacter::BuildComplete()
 	{
 		return;
 	}
-
 	UE_LOG(LogTemp, Warning, TEXT("BuildComplete"));
+
+	ABaseTurret* HoldingTurret = Cast<ABaseTurret>(HoldingActor); //나중에 기반시설 만들면 ABaseTurret으로 cast하면 안될텐데?
+	if (HoldingTurret->GetBuildState() == EBuildState::EBS_OnBuildRed) //후에 cost부족시에도 return되게 조건 수정할 것
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Can't Build")); //건설불가 UI뜨도록 수정하는게 좋겠다. 일단 Log로 퉁
+		return;
+	}
+	HoldingTurret->BuildCompleted();
+
+	HoldingActor = nullptr;
+	HoldingTurret = nullptr;
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 	{
 		Subsystem->ClearAllMappings();
 		Subsystem->AddMappingContext(IMC_PlayerCombat, 0);
 	}
-
-	ABaseTurret* HoldingTurret = Cast<ABaseTurret>(HoldingActor); //나중에 기반시설 만들면 ABaseTurret으로 cast하면 안될텐데?
-	HoldingTurret->BuildCompleted();
-
-	HoldingTurret = nullptr;
-	HoldingActor = nullptr;
 }

@@ -10,8 +10,6 @@
 #include "Components/AudioComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 
-#include "Components/SphereComponent.h"
-
 AFlamethrowerTurret::AFlamethrowerTurret()
 {
 	ProjectileSpawner = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSpawner"));
@@ -55,42 +53,49 @@ void AFlamethrowerTurret::TurretBehaviorStateMachine(float DeltaTime)
 {
 
 	switch (TurretState)
-	{
-	case ETurretState::ETS_OnBuild:
-	{
-		break;
-	}
-	case ETurretState::ETS_Searching:
-	{
-		RotateTurret();
-		if (EnemyArray.Num() > 0)
 		{
-			SetTurretState(ETurretState::ETS_InCombat);
-		}
-		break;
-	}
-	case ETurretState::ETS_InCombat:
-	{
-		LookAtEnemy(DeltaTime);
-		SetTurretActivation(true);
+		case ETurretState::ETS_OnBuild:
+		{
+			FHitResult CurorHitResult;
+			UGameplayStatics::GetPlayerController(this, 0)->GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, CurorHitResult); // 후에 Build용 traceChannel만들어서 바꿀것, traceComplex먼지몰라서 true
 
-		if (EnemyArray.Num() < 1)
-		{
-			SetTurretActivation(false);
-			SetTurretState(ETurretState::ETS_Searching);
+			float InGridSize = 50.f;
+			FVector BuildPosition = UKismetMathLibrary::Vector_SnappedToGrid(CurorHitResult.Location, InGridSize);
+
+			SetActorLocation(BuildPosition);
+			break;
 		}
-		if (bCanFire)
+		case ETurretState::ETS_Searching:
 		{
-			Fire();
-			FireDelay(DeltaTime);
+			RotateTurret();
+			if (EnemyArray.Num() > 0)
+			{
+				SetTurretState(ETurretState::ETS_InCombat);
+			}
+			break;
 		}
-		break;
-	}
-	default:
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[%s] TurretState is Default!"), *GetName());
-		break;
-	}
+		case ETurretState::ETS_InCombat:
+		{
+			LookAtEnemy(DeltaTime);
+			SetTurretActivation(true);
+
+			if (EnemyArray.Num() < 1)
+			{
+				SetTurretActivation(false);
+				SetTurretState(ETurretState::ETS_Searching);
+			}
+			if (bCanFire)
+			{
+				Fire();
+				FireDelay(DeltaTime);
+			}
+			break;
+		}
+		default:
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[%s] TurretState is Default!"), *GetName());
+			break;
+		}
 	}
 }
 
@@ -98,9 +103,10 @@ void AFlamethrowerTurret::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//스프린트위한 임시코드 (종료후 꼭! 삭제할것) + include SphereComponent도 제거
+	/** 스프린트위한 임시코드(종료후 꼭!삭제할것) + include SphereComponent도 제거
 	TurretState = ETurretState::ETS_Searching;
 	FireField->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
+	*/
 }
 
 void AFlamethrowerTurret::SetTurretActivation(bool bBool)
