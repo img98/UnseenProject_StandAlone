@@ -72,9 +72,6 @@ protected:
 	void Fire();
 
 	UFUNCTION(BlueprintCallable)
-	void BuildMenuTrigger(UInputMappingContext* InIMC);
-
-	UFUNCTION(BlueprintCallable)
 	void BuildStart(UClass* InBuildingRef);
 	UFUNCTION(BlueprintCallable)
 	void BuildComplete();
