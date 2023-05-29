@@ -28,13 +28,12 @@ void ABaseBuildingActor::BeginPlay()
 	for (UActorComponent* EachComponent : CollisionArray)
 	{
 		UPrimitiveComponent* EachPrimitiveComponent = Cast<UPrimitiveComponent>(EachComponent);
-		EachPrimitiveComponent->SetCollisionProfileName(TEXT("BuildingPreset"));
+		EachPrimitiveComponent->SetCollisionProfileName(TEXT("BuildingBodyPreset"));
 	}
-	BuildCollision->SetCollisionProfileName(TEXT("OverlapAllDynamic")); //나중에 채널파줘야될듯. 일단 임시방편
+	BuildCollision->SetCollisionProfileName(TEXT("PreBuildPreset")); //나중에 채널파줘야될듯. 일단 임시방편
 
 	/** build시작 시, 초록색 material로 변경*/
 	SetAllOverlayMaterials(GreenMaterial);
-	// Build 가능한 위치인지를 표시하는 property 하나 만들어줘야겠다.
 }
 
 void ABaseBuildingActor::Tick(float DeltaTime)
@@ -45,22 +44,32 @@ void ABaseBuildingActor::Tick(float DeltaTime)
 
 void ABaseBuildingActor::BuildCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	SetAllOverlayMaterials(RedMaterial);
-	CurrentBuildState = EBuildState::EBS_OnBuildRed;
+	if (CurrentBuildState != EBuildState::EBS_BuildCompleted)
+	{
+		CurrentBuildState = EBuildState::EBS_OnBuildRed;
+		SetAllOverlayMaterials(RedMaterial);
+	}
 }
 
 void ABaseBuildingActor::BuildCollisionEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	SetAllOverlayMaterials(GreenMaterial);
-	CurrentBuildState = EBuildState::EBS_OnBuildGreen;
+	if (CurrentBuildState != EBuildState::EBS_BuildCompleted)
+	{
+		CurrentBuildState = EBuildState::EBS_OnBuildGreen;
+		SetAllOverlayMaterials(GreenMaterial);
+	}
 }
 
 void ABaseBuildingActor::BuildCompleted()
 {
-	BuildCollision->SetGenerateOverlapEvents(false);
-	CurrentBuildState = EBuildState::EBS_BuildCompleted;
+	//BuildCollision->SetGenerateOverlapEvents(false);
+	if (CurrentBuildState != EBuildState::EBS_BuildCompleted)
+	{
+		CurrentBuildState = EBuildState::EBS_BuildCompleted;
+		SetAllOverlayMaterials(nullptr);
 
-	SetAllOverlayMaterials(nullptr);
+		BuildCollision->SetCollisionProfileName(TEXT("GameObjectPreset"));
+	}
 }
 
 void ABaseBuildingActor::SetAllOverlayMaterials(UMaterialInterface* InMaterial)

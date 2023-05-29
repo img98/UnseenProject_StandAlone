@@ -135,7 +135,7 @@ void APlayerCharacter::BuildComplete()
 	UE_LOG(LogTemp, Warning, TEXT("BuildComplete"));
 
 	ABaseTurret* HoldingTurret = Cast<ABaseTurret>(HoldingActor); //나중에 기반시설 만들면 ABaseTurret으로 cast하면 안될텐데?
-	if (HoldingTurret->GetBuildState() == EBuildState::EBS_OnBuildRed) //후에 cost부족시에도 return되게 조건 수정할 것
+	if (HoldingTurret->GetBuildState() != EBuildState::EBS_OnBuildGreen) //후에 cost부족시에도 return되게 조건 수정할 것
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Can't Build")); //건설불가 UI뜨도록 수정하는게 좋겠다. 일단 Log로 퉁
 		return;
