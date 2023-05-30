@@ -50,6 +50,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	EPlayerState CurrentState;
 
+	/** Enhanced Input */
+	/** Player Combat InputMappingContext*/
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputMappingContext* IMC_PlayerCombat;
 	UPROPERTY(EditAnywhere, Category = Input)
@@ -59,6 +61,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* IA_BuildMenuTrigger;
 
+	/** Player Build InputMappingContext*/
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputMappingContext* IMC_PlayerBuildMenu;
 	UPROPERTY(EditAnywhere, Category = Input)

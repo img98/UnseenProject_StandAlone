@@ -58,7 +58,12 @@ void ABaseProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActo
 		FDamageEvent DamageEvent;
 		if (IsValid(ParentTurret))
 		{
-			OtherActor->TakeDamage(ParentTurret->GetStatComponent()->GetAttackDamage(), DamageEvent, UGameplayStatics::GetPlayerController(this, 0), this);
+			OtherActor->TakeDamage(
+				ParentTurret->GetStatComponent()->GetAttackDamage(),
+				DamageEvent,
+				UGameplayStatics::GetPlayerController(this, 0), //후에 ParentTurret의 ParentPlayer를 찾아서 컨트롤러를 연결해주자
+				this //그저 this가 아니라 ParentTurret의 ParentPlayer로 해주는게 좋을지도 모르겠다.
+			);
 		}
 		
 		Destroy();

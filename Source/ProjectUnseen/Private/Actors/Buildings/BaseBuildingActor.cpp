@@ -33,6 +33,7 @@ void ABaseBuildingActor::BeginPlay()
 	BuildCollision->SetCollisionProfileName(TEXT("PreBuildPreset")); //나중에 채널파줘야될듯. 일단 임시방편
 
 	/** build시작 시, 초록색 material로 변경*/
+	CurrentBuildState = EBuildState::EBS_OnBuildGreen;
 	SetAllOverlayMaterials(GreenMaterial);
 }
 
