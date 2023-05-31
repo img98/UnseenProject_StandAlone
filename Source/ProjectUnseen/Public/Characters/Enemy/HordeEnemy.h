@@ -3,27 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Characters/BaseCharacter.h"
-#include "EnemyCharacter.generated.h"
+#include "Characters/Enemy/EnemyCharacter.h"
+#include "HordeEnemy.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTUNSEEN_API AEnemyCharacter : public ABaseCharacter
+class PROJECTUNSEEN_API AHordeEnemy : public AEnemyCharacter
 {
 	GENERATED_BODY()
 	
 public:
-	AEnemyCharacter();
+	AHordeEnemy();
 
 	virtual void Tick(float DeltaTime) override;
 
+
 protected:
 	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere)
-	USphereComponent* AggroSphere;
 
 private:
 
