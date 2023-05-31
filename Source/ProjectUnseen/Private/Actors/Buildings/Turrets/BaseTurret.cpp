@@ -151,7 +151,7 @@ void ABaseTurret::FireFieldEndOverlap(UPrimitiveComponent* OverlappedComp, AActo
 void ABaseTurret::BuildCompleted()
 {
 	Super::BuildCompleted();
-	TurretState = ETurretState::ETS_Searching;
 
-	FireField->SetCollisionProfileName(TEXT("OverlapAllDynamic")); //건설 완료시 공격범위 profile다시 설정해주기
+	TurretState = ETurretState::ETS_Searching;
+	FireField->SetCollisionProfileName(TEXT("AggroSpherePreset")); //건설 완료시 공격범위 profile다시 설정해주기
 }

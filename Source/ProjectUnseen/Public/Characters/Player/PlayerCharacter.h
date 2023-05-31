@@ -50,16 +50,23 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	EPlayerState CurrentState;
 
+	/** Enhanced Input */
+	/** Player Combat InputMappingContext*/
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputMappingContext* IMC_PlayerCombat;
-	UPROPERTY(EditAnywhere, Category = Input)
-	UInputMappingContext* IMC_PlayerBuildMenu;
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* IA_Movement;
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* IA_Fire;
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* IA_BuildMenuTrigger;
+
+	/** Player Build InputMappingContext*/
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputMappingContext* IMC_PlayerBuildMenu;
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* IA_BuildComplete;
+
 
 	void Move(const FInputActionValue& Value);
 
@@ -68,7 +75,11 @@ protected:
 	void Fire();
 
 	UFUNCTION(BlueprintCallable)
-	void BuildMenuTrigger();
+	void BuildStart(UClass* InBuildingRef);
+	UFUNCTION(BlueprintCallable)
+	void BuildComplete();
+	UPROPERTY()
+	AActor* HoldingActor;
 
 private:
 

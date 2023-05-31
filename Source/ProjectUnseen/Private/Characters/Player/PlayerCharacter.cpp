@@ -10,6 +10,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/StatComponent.h"
 
+#include "Actors/Buildings/Turrets/BaseTurret.h"
+
 APlayerCharacter::APlayerCharacter()
 {
 
@@ -51,15 +53,19 @@ void APlayerCharacter::Tick(float DeltaTime)
 	LookCursorDirection();
 }
 
+// Called to bind functionality to input
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
+	// IMC_PlayerCombat
 	EnhancedInputComponent->BindAction(IA_Movement, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
 	EnhancedInputComponent->BindAction(IA_Fire, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
 
+	// IMC_Build
+	EnhancedInputComponent->BindAction(IA_BuildComplete, ETriggerEvent::Triggered, this, &APlayerCharacter::BuildComplete);
 
 }
 
@@ -94,7 +100,7 @@ void APlayerCharacter::LookCursorDirection()
 	const FRotator CharacterLookRotator = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), HitResult.Location);
 	const FRotator TargetRotator(0.f, CharacterLookRotator.Yaw, 0.f);
 	this->SetActorRotation(TargetRotator);
-	//다만, 이경우 고저차가 있는곳위로 커서가 움직일때 Jerking현상이 있더라. Interp등으로 나중에 보완해야될듯
+	//다만, 이경우 고저차가 있는곳위로 커서가 움직일때 Jerking현상이 있더라. Lerp등으로 나중에 보완해야될듯
 }
 
 void APlayerCharacter::Fire()
@@ -102,7 +108,47 @@ void APlayerCharacter::Fire()
 	UE_LOG(LogTemp, Warning, TEXT("Player Fire!"));
 }
 
-void APlayerCharacter::BuildMenuTrigger()
+void APlayerCharacter::BuildStart(UClass* InBuildingRef)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Build Action Trigger activated!"));
+	if (!InBuildingRef)
+	{
+		return;
+	}
+
+	if (!IsValid(HoldingActor))
+	{
+		HoldingActor = GetWorld()->SpawnActor<AActor>(InBuildingRef, FTransform());
+	}
+
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	{
+		Subsystem->ClearAllMappings();
+		Subsystem->AddMappingContext(IMC_PlayerBuildMenu, 0);
+	}
+}
+
+void APlayerCharacter::BuildComplete()
+{
+	if (!IsValid(HoldingActor))
+	{
+		return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("BuildComplete"));
+
+	ABaseTurret* HoldingTurret = Cast<ABaseTurret>(HoldingActor); //나중에 기반시설 만들면 ABaseTurret으로 cast하면 안될텐데?
+	if (HoldingTurret->GetBuildState() != EBuildState::EBS_OnBuildGreen) //후에 cost부족시에도 return되게 조건 수정할 것
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Can't Build")); //건설불가 UI뜨도록 수정하는게 좋겠다. 일단 Log로 퉁
+		return;
+	}
+	HoldingTurret->BuildCompleted();
+
+	HoldingActor = nullptr;
+	HoldingTurret = nullptr;
+
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	{
+		Subsystem->ClearAllMappings();
+		Subsystem->AddMappingContext(IMC_PlayerCombat, 0);
+	}
 }
