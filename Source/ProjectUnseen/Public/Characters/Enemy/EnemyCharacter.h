@@ -6,9 +6,8 @@
 #include "Characters/BaseCharacter.h"
 #include "EnemyCharacter.generated.h"
 
-/**
- * 
- */
+class USphereComponent;
+
 UCLASS()
 class PROJECTUNSEEN_API AEnemyCharacter : public ABaseCharacter
 {
