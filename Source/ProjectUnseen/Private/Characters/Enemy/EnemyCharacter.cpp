@@ -7,6 +7,7 @@
 AEnemyCharacter::AEnemyCharacter()
 {
 	AggroSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AggroSphere"));
+	AggroSphere->SetupAttachment(GetRootComponent());
 }
 
 void AEnemyCharacter::Tick(float DeltaTime)
