@@ -35,6 +35,8 @@ protected:
 	UPROPERTY()
 	float GunFever = 2.f;
 
+	float CoolingInterpSpeed = 2.f;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	USceneComponent* ProjectileSpawner;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")

@@ -101,7 +101,7 @@ void ABaseTurret::LookAtEnemy(float DeltaTIme)
 	if (Target == nullptr) return;
 
 	const FRotator LookTargetRotator = UKismetMathLibrary::FindLookAtRotation(RotateGunAnchor->GetComponentLocation(), Target->GetActorLocation());
-	const FRotator InterpTargetRotator = UKismetMathLibrary::RInterpTo(RotateGunAnchor->GetComponentRotation(), LookTargetRotator, DeltaTIme, RotateInterpSpeed);
+	const FRotator InterpTargetRotator = UKismetMathLibrary::RInterpTo_Constant(RotateGunAnchor->GetComponentRotation(), LookTargetRotator, DeltaTIme, RotateInterpSpeed);
 	TurretBodyMesh->SetWorldRotation(FRotator(0.f, InterpTargetRotator.Yaw, 0.f));
 	TurretGunMesh->SetRelativeRotation(FRotator(InterpTargetRotator.Pitch, 0.f, 0.f));
 
