@@ -61,11 +61,11 @@ void AGaussTurret::GetGunFever(float Fever)
 }
 void AGaussTurret::CoolingGunFever(float DeltaTime)
 {
-	HotMetal_Intensity = UKismetMathLibrary::FInterpTo(
+	HotMetal_Intensity = UKismetMathLibrary::FInterpTo(//constant를 사용하니 불이 너무 확꺼지더라
 		HotMetal_Intensity,
 		0.f,
 		DeltaTime,
-		2.f);
+		CoolingInterpSpeed);
 	HotMetal->SetScalarParameterValueOnMaterials(FName(TEXT("Intensity")), HotMetal_Intensity);
 }
 

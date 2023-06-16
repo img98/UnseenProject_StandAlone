@@ -57,7 +57,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<AEnemyCharacter*> EnemyArray;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float RotateInterpSpeed = 10.f;
+	float RotateInterpSpeed = 100.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bCanFire = true;
 

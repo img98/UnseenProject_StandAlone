@@ -32,6 +32,8 @@ protected:
 	float HotMetal_Intensity;
 	UPROPERTY()
 	float GunFever=6.f;
+	
+	float CoolingInterpSpeed = 2.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
 	TSubclassOf<ABaseProjectile> ProjectileClass;
