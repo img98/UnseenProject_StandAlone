@@ -3,6 +3,16 @@
 
 #include "Characters/Player/SAPlayerController.h"
 
+void ASAPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	/** 시작과 동시에 마우스가 viewport에 종속되는 것을 생각했으나, GameAndUI로 하니 의미가 없더라.
+	FInputModeGameAndUI InputModeGameAndUI;
+	SetInputMode(InputModeGameAndUI);
+	*/
+}
+
 void ASAPlayerController::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
