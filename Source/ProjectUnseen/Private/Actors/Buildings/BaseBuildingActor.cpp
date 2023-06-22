@@ -5,6 +5,17 @@
 ABaseBuildingActor::ABaseBuildingActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> GreenMaterialRef(TEXT("/Game/Assets/VL_TurretsPack/Materials/M_HologramGreen.M_HologramGreen"));
+	if (nullptr != GreenMaterialRef.Object)
+	{
+		GreenMaterial = GreenMaterialRef.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> RedMaterialRef(TEXT("/Game/Assets/VL_TurretsPack/Materials/M_HologramRed.M_HologramRed"));
+	if (nullptr != RedMaterialRef.Object)
+	{
+		RedMaterial = RedMaterialRef.Object;
+	}
 
 	//각 collision과 메쉬들이 camera와 trace collision ignore되게 설정할것!
 
