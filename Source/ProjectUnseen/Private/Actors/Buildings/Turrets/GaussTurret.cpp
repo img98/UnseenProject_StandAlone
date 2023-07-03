@@ -16,8 +16,6 @@ AGaussTurret::AGaussTurret()
 	ProjectileSpawner->SetupAttachment(TurretGunMesh);
 
 	//HotMetal->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-
-	StatComponent->SetStats(10.f, 10.f, 2.5f, 0.f);
 }
 
 void AGaussTurret::Fire()

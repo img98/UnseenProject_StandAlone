@@ -16,8 +16,6 @@ ATeslaTurret::ATeslaTurret()
 	ProjectileSpawner->SetupAttachment(TurretGunMesh);
 	TeslaFx = CreateDefaultSubobject<UNiagaraComponent>(TEXT("TeslaFx"));
 	TeslaFx->SetupAttachment(TurretGunMesh);
-
-	StatComponent->SetStats(10.f, 10.f, 2.5f, 0.f);
 }
 
 void ATeslaTurret::Fire()

@@ -25,7 +25,7 @@ protected:
 	void Deactivate();
 	UPROPERTY()
 	bool bActivated;
-	void Dead();
+	virtual void IsDead() override;
 
 private:
 

@@ -19,7 +19,7 @@ APlayerCharacter::APlayerCharacter()
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArm->SetupAttachment(RootComponent);
-	SpringArm->TargetArmLength = 1400.f;
+	SpringArm->TargetArmLength = 1800.f;
 	SpringArm->SetRelativeRotation(FRotator(-75.f, 0.f, 0.f));
 	SpringArm->bEnableCameraLag = true;
 	SpringArm->CameraLagSpeed = 30.f;
