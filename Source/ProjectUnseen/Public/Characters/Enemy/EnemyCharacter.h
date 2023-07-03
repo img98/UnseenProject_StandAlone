@@ -20,10 +20,16 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere)
-	USphereComponent* AggroSphere;
+	
+	void Activate();
+	void Deactivate();
+	UPROPERTY()
+	bool bActivated;
+	void Dead();
 
 private:
 
+public:
+	void SetActivated(bool InBool); //activate 내부로직을 못건드리게 캡슐화시키는게 맞을까 그냥 public에 넣는게 맞을까?
+	FORCEINLINE bool GetActivated() { return bActivated; }
 };

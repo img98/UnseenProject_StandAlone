@@ -6,8 +6,9 @@
 
 AHordeEnemy::AHordeEnemy()
 {
-	/** AIControllerClass할당이 프로퍼티로 되있더라. 이걸 Bp에서 할당해줘야할까 아님 header에서 할당해서 넣어야할까?*/
 	AIControllerClass = ASAAIController::StaticClass();
+
+	PrimaryActorTick.bCanEverTick = false; //Tick을 제거해 성능향상을 노림
 }
 
 void AHordeEnemy::Tick(float DeltaTime)
