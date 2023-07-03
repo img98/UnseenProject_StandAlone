@@ -15,7 +15,7 @@ class PROJECTUNSEEN_API ASAAIController : public AAIController
 	GENERATED_BODY()
 	
 public:
-	ASAAIController();
+	ASAAIController(const FObjectInitializer& ObjectInitializer);
 
 	void RunAI();
 	void StopAI();
