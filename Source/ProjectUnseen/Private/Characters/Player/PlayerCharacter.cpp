@@ -66,6 +66,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	// IMC_Build
 	EnhancedInputComponent->BindAction(IA_BuildComplete, ETriggerEvent::Triggered, this, &APlayerCharacter::BuildComplete);
+	EnhancedInputComponent->BindAction(IA_BuildCancel, ETriggerEvent::Triggered, this, &APlayerCharacter::BuildCancel);
 
 }
 
@@ -151,4 +152,16 @@ void APlayerCharacter::BuildComplete()
 		Subsystem->ClearAllMappings();
 		Subsystem->AddMappingContext(IMC_PlayerCombat, 0);
 	}
+}
+
+void APlayerCharacter::BuildCancel()
+{
+	if (!IsValid(HoldingActor))
+	{
+		return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("BuildCancel"));
+
+	HoldingActor->Destroy();
+	HoldingActor = nullptr;
 }
