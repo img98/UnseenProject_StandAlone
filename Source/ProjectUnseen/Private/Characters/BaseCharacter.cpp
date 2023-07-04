@@ -24,6 +24,10 @@ void ABaseCharacter::BeginPlay()
 	
 }
 
+void ABaseCharacter::IsDead()
+{
+}
+
 // Called every frame
 void ABaseCharacter::Tick(float DeltaTime)
 {
@@ -36,6 +40,12 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	float FinalDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	StatComponent->DecreaseCurrentHP(FinalDamage);
 	UE_LOG(LogTemp, Warning, TEXT("Take [%.1f] damage, now [%.1f] HP left"), FinalDamage, StatComponent->GetCurrentHP());
+	if (StatComponent->GetCurrentHP() == 0)
+	{
+		IsDead();
+	}
 	return FinalDamage;
 }
+
+
 

@@ -66,6 +66,8 @@ protected:
 	UInputMappingContext* IMC_PlayerBuildMenu;
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* IA_BuildComplete;
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* IA_BuildCancel;
 
 
 	void Move(const FInputActionValue& Value);

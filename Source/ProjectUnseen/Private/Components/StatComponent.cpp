@@ -2,6 +2,7 @@
 
 
 #include "Components/StatComponent.h"
+#include "GameData/SAStatData.h"
 
 UStatComponent::UStatComponent()
 {
@@ -28,13 +29,12 @@ void UStatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 }
 
-void UStatComponent::SetStats(float InMaxHP, float InAttackDamage, float InAttackSpeed, float InMovementSpeed)
+void UStatComponent::SetStats(USAStatData* InStatData)
 {
-	SetMaxHP(InMaxHP);
-	SetCurrentHP(InMaxHP);
-	SetAttackDamage(InAttackDamage);
-	SetAttackSpeed(InAttackSpeed);
-	SetMovementSpeed(InMovementSpeed);
+	SetMaxHP(InStatData->MaxHP);
+	SetCurrentHP(InStatData->CurrentHP);
+	SetAttackDamage(InStatData->AttackDamage);
+	SetAttackSpeed(InStatData->AttackSpeed);
 }
 
 float UStatComponent::GetHPRatio()

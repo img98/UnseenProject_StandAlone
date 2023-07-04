@@ -20,8 +20,6 @@ AFlamethrowerTurret::AFlamethrowerTurret()
 	PersistentFireFX = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("PersistentFireFX"));
 	PersistentFireFX->SetupAttachment(ProjectileSpawner);
 	PersistentFireFX->SetAutoActivate(false);
-
-	StatComponent->SetStats(10.f, 1.f, 0.1f, 0.f);
 }
 
 
@@ -102,7 +100,6 @@ void AFlamethrowerTurret::TurretBehaviorStateMachine(float DeltaTime)
 void AFlamethrowerTurret::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void AFlamethrowerTurret::SetTurretActivation(bool bBool)

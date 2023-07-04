@@ -5,6 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "AIController.h"
 #include "BrainComponent.h"
+#include "Components/StatComponent.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -42,6 +43,8 @@ void AEnemyCharacter::Activate()
 		SetActorEnableCollision(true);
 		SetActorTickEnabled(true);
 	}
+
+	StatComponent->SetCurrentHP(StatComponent->GetMaxHP());
 }
 
 void AEnemyCharacter::Deactivate()
@@ -57,10 +60,10 @@ void AEnemyCharacter::Deactivate()
 	SetActorTickEnabled(false);
 }
 
-void AEnemyCharacter::Dead()
+void AEnemyCharacter::IsDead() //사망애니메이션 재생 후, Notify든 몽타주 등을 통해 IsDead를 호출하는게 좋을것같다. 안그러면 애니메이션 끝나기도 전에 Deactivate된다.
 {
 	//죽으면 필요한 기능들
-
+	Deactivate();
 }
 
 void AEnemyCharacter::SetActivated(bool InBool)
