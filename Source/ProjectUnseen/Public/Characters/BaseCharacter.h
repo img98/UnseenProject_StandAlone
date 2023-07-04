@@ -23,6 +23,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UStatComponent* StatComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class USAStatData* StatData;
+
+	virtual void IsDead();
 
 public:	
 	virtual void Tick(float DeltaTime) override;

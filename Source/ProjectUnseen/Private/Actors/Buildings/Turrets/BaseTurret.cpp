@@ -86,6 +86,8 @@ void ABaseTurret::BeginPlay()
 
 	FireField->OnComponentBeginOverlap.AddDynamic(this, &ABaseTurret::FireFieldBeginOverlap);
 	FireField->OnComponentEndOverlap.AddDynamic(this, &ABaseTurret::FireFieldEndOverlap);
+
+	StatComponent->SetStats(StatData);
 }
 
 void ABaseTurret::RotateTurret()

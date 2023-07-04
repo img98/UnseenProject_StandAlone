@@ -27,11 +27,11 @@ protected:
 
 	void SetTurretActivation(bool bBool);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, Category = "Body")
 	USceneComponent* ProjectileSpawner;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, Category = "Body")
 	UAudioComponent* LoopingFiresound;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, Category = "Body")
 	UParticleSystemComponent* PersistentFireFX;
 
 	UPROPERTY()

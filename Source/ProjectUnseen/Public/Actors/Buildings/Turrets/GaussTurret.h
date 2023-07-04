@@ -24,9 +24,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Body")
 	USceneComponent* ProjectileSpawner;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Body")
 	UStaticMeshComponent* HotMetal;
 	UPROPERTY()
 	float HotMetal_Intensity;

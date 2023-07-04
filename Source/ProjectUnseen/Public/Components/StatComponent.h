@@ -33,8 +33,6 @@ private:
 	float AttackDamage;
 	UPROPERTY(VisibleAnywhere)
 	float AttackSpeed;
-	UPROPERTY(VisibleAnywhere)
-	float MovementSpeed;
 
 public:
 
@@ -42,7 +40,7 @@ public:
 	float GetHPRatio();
 	
 	UFUNCTION(BlueprintCallable)
-	void SetStats(float InMaxHP, float InAttackDamage, float InAttackSpeed, float InMovementSpeed);
+	void SetStats(USAStatData* InStatData);
 
 	FORCEINLINE float GetCurrentHP() { return CurrentHP; }
 	FORCEINLINE void SetCurrentHP(float InCurrentHP) { CurrentHP = InCurrentHP; }
@@ -54,6 +52,4 @@ public:
 	FORCEINLINE void SetAttackDamage(float InAttackDamage) { AttackDamage = InAttackDamage; }
 	FORCEINLINE float GetAttackSpeed() { return AttackSpeed; }
 	FORCEINLINE void SetAttackSpeed(float InAttackSpeed) { AttackSpeed = InAttackSpeed; }
-	FORCEINLINE float GetMovementSpeed() { return MovementSpeed; }
-	FORCEINLINE void SetMovementSpeed(float InMovementSpeed) { MovementSpeed = InMovementSpeed; }
 };

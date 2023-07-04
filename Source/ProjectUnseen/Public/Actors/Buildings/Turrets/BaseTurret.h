@@ -32,16 +32,19 @@ protected:
 	virtual void BeginPlay() override;
 
 	// ÅÍ·¿ ÄÄÆ÷³ÍÆ® ±¸Á¶
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Body")
 	UStaticMeshComponent* TurretRootMesh;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Body")
 	UStaticMeshComponent* TurretBodyMesh;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Body")
 	UStaticMeshComponent* TurretGunMesh;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Body")
 	USceneComponent* RotateGunAnchor;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Body")
 	USphereComponent* FireField;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class USAStatData* StatData;
 
 	//ÅÍ·¿ º° projectile ±¸¼º¹°
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
