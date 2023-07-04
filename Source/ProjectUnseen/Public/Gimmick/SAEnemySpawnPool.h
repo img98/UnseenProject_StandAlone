@@ -19,6 +19,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	void Spawn();
+	void IncreasePoolSize();
 
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* SpawnField;
@@ -34,7 +35,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TArray<AEnemyCharacter*> SpawningPool;
 	UPROPERTY()
-	int32 MaxPoolPopulation=20;
+	int32 MaxPoolPopulation = 5;
+	UPROPERTY()
+	int32 IncreaseRate = 2;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

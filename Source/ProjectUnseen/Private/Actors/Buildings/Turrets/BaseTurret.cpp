@@ -92,7 +92,7 @@ void ABaseTurret::BeginPlay()
 
 void ABaseTurret::RotateTurret()
 {
-	// TODO: 의미없이 빙빙돌기 구현하기 or 고개숙이고 대기하기 구현
+	//빙빙돌기 or 고개숙이기 . 비주얼적 요소이기에 최후부에 구현하자
 }
 
 void ABaseTurret::LookAtEnemy(float DeltaTIme)

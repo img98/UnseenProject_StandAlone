@@ -6,6 +6,7 @@
 #include "AI/SAAIController.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "SAGameMode.h"
 
 ASAEnemySpawnPool::ASAEnemySpawnPool()
 {
@@ -23,6 +24,10 @@ void ASAEnemySpawnPool::BeginPlay()
 {
 	Super::BeginPlay();
 
+	ASAGameMode* GameMode = Cast<ASAGameMode>(GetWorld()->GetAuthGameMode());
+	GameMode->OnInitialSpawn.AddUObject(this, &ASAEnemySpawnPool::Spawn);
+	GameMode->OnIncreasePoolSize.AddUObject(this, &ASAEnemySpawnPool::IncreasePoolSize);
+
 	//Fill SpawningPool
 	for (int32 i = 0; i < MaxPoolPopulation; ++i)
 	{
@@ -36,11 +41,9 @@ void ASAEnemySpawnPool::BeginPlay()
 		);
 		SpawningPool.Emplace(SpawnedCharacter);
 	}
-
-	Spawn();
 }
 
-void ASAEnemySpawnPool::Spawn()
+void ASAEnemySpawnPool::Spawn() //Delegate로 인해 실행
 {
 	if (SpawningPool.IsEmpty() == false)
 	{
@@ -68,6 +71,20 @@ void ASAEnemySpawnPool::Spawn()
 		SpawnDelay,
 		false //repeat Timer, 이미 함수내에서 재귀적으로 호출하기에 여기는 False해줘야할듯?
 	);
+}
+
+void ASAEnemySpawnPool::IncreasePoolSize()
+{
+	for (int32 i = 0; i < IncreaseRate; ++i)
+	{
+		AEnemyCharacter* SpawnedCharacter = GetWorld()->SpawnActor<AEnemyCharacter>(
+			SpawnEnemyClass,
+			UKismetMathLibrary::RandomPointInBoundingBox(SpawnField->GetComponentLocation(), SpawnField->GetScaledBoxExtent()),
+			GetActorRotation()
+		);
+		SpawningPool.Emplace(SpawnedCharacter);
+		++MaxPoolPopulation;
+	}
 }
 
 void ASAEnemySpawnPool::Tick(float DeltaTime)

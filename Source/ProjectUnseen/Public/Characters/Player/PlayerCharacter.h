@@ -80,6 +80,8 @@ protected:
 	void BuildStart(UClass* InBuildingRef);
 	UFUNCTION(BlueprintCallable)
 	void BuildComplete();
+	UFUNCTION(BlueprintCallable)
+	void BuildCancel();
 	UPROPERTY()
 	AActor* HoldingActor;
 
