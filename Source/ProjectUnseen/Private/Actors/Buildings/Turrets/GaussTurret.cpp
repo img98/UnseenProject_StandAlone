@@ -21,7 +21,7 @@ AGaussTurret::AGaussTurret()
 void AGaussTurret::Fire()
 {
 	bCanFire = false;
-	
+	//스프린트: 외적인가 내적써서 일정각도 이상이면 fire되지 않게 
 	GetGunFever(GunFever);
 
 	if (ProjectileClass && FireSound && MuzzleParticle)

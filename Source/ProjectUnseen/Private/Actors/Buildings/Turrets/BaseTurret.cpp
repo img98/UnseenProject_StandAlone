@@ -67,7 +67,7 @@ void ABaseTurret::TurretBehaviorStateMachine(float DeltaTime)
 			}
 			if (bCanFire)
 			{
-				Fire();
+				Fire(); //raycast 해서 있으면 발사되게해도 괜찮을듯?
 				FireDelay(DeltaTime);
 			}
 			break;
