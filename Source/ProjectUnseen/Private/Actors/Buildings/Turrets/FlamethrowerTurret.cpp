@@ -24,7 +24,7 @@ AFlamethrowerTurret::AFlamethrowerTurret()
 }
 
 
-void AFlamethrowerTurret::Fire() //문제다문제~
+void AFlamethrowerTurret::Fire() //문제다문제~ 모르겠다~
 {
 	bCanFire = false;
 
@@ -32,56 +32,56 @@ void AFlamethrowerTurret::Fire() //문제다문제~
 	//사실 여기서 Pawn으로 하면 내캐릭터도 데미지 받을거라 새로운 채널파주는게 맞긴한데, 화염방사기가 너무 op니 이런페널티도 나쁘지 않을듯
 	ObjectType.Emplace(ECollisionChannel::ECC_Pawn);
 	TArray<FHitResult> HitEnemy;
-	/** 
-	UKismetSystemLibrary::SphereTraceMultiForObjects(
-		this,
-		ProjectileSpawner->GetComponentLocation(),
-		DamageRadius * ProjectileSpawner->GetForwardVector() + ProjectileSpawner->GetComponentLocation(),
-		22.f,
-		ObjectType,
-		true,
-		TArray<AActor*>(),
-		EDrawDebugTrace::ForOneFrame,
-		HitEnemy,
-		true
-	);
-	*/
+	
 	UKismetSystemLibrary::SphereTraceMultiByProfile(
 		this,
 		ProjectileSpawner->GetComponentLocation(),
 		DamageRadius * ProjectileSpawner->GetForwardVector() + ProjectileSpawner->GetComponentLocation(),
-		100.f,
+		220.f,
 		FName("EnemyCapsulePreset"),
 		false,
 		TArray<AActor*>(),
-		EDrawDebugTrace::ForOneFrame,
+		EDrawDebugTrace::ForDuration,
 		HitEnemy,
 		true
 	);
+
+	/**
+	UKismetSystemLibrary::CapsuleOverlapActors(
+		this,
+		ProjectileSpawner->GetComponentLocation() + FVector(0.f, 0.f, 500.f),
+		500.f,
+		60.f,
+		ObjectType,
+		nullptr,
+		TArray<AActor*>(),
+		HitEnemy
+	);
+	 */
 	//얘는 다단히트된다. 버그잡ㅇ야대ㅗ... 원인은 아마 이 코드자체가 여러번 호출되서 그런듯? 들어가는 데미지가 살짝씩 다르더라고..
 	UE_LOG(LogTemp, Error, TEXT("!"));
-	for (FHitResult HitResult : HitEnemy)
+	for (auto HitResult : HitEnemy)
 	{
 		FString HitResultName = HitResult.GetActor()->GetName();
 		UE_LOG(LogTemp, Error, TEXT("%s"), *HitResultName);
 	}
-	/** 
-	for (FHitResult HitResult : HitEnemy)
-	{
-		FDamageEvent DamageEvent;
-		if (IsValid(HitResult.GetActor()))
-		{
-			FString HitResultName = HitResult.GetActor()->GetName();
-			UE_LOG(LogTemp, Error, TEXT("%s"),*HitResultName);
-			HitResult.GetActor()->TakeDamage(
-				GetStatComponent()->GetAttackDamage(),
-				DamageEvent,
-				UGameplayStatics::GetPlayerController(this, 0),
-				this
-			);
-		}
-	}
-	*/
+	
+	//for (FHitResult HitResult : HitEnemy)
+	//{
+	//	FDamageEvent DamageEvent;
+	//	if (IsValid(HitResult.GetActor()))
+	//	{
+	//		FString HitResultName = HitResult.GetActor()->GetName();
+	//		UE_LOG(LogTemp, Error, TEXT("%s"),*HitResultName);
+	//		HitResult.GetActor()->TakeDamage(
+	//			GetStatComponent()->GetAttackDamage(),
+	//			DamageEvent,
+	//			UGameplayStatics::GetPlayerController(this, 0),
+	//			this
+	//		);
+	//	}
+	//}
+
 	/** 
 	for (auto i = 0; HitEnemy.Num(); ++i)
 	{
@@ -114,6 +114,7 @@ void AFlamethrowerTurret::TurretBehaviorStateMachine(float DeltaTime) //SetTurre
 		case ETurretState::ETS_OnBuild:
 		{
 			FHitResult CurorHitResult;
+			//커서위치가 이동할때만 tick돌아가게?
 			UGameplayStatics::GetPlayerController(this, 0)->GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, CurorHitResult); // 후에 Build용 traceChannel만들어서 바꿀것, traceComplex먼지몰라서 true
 
 			float InGridSize = 50.f;
