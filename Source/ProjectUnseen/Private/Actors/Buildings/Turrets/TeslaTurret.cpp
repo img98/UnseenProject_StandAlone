@@ -36,7 +36,7 @@ void ATeslaTurret::Fire()
 	// No Projectile -> Approach by Memory
 	if (EnemyArray.IsValidIndex(0))
 	{
-		AEnemyCharacter* Target = EnemyArray[0];
+		AEnemyCharacter* Target = EnemyArray[0].Get();
 		if (Target && HitSound && HitParticle)
 		{
 			FDamageEvent DamageEvent;

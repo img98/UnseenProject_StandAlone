@@ -25,8 +25,6 @@ protected:
 	class UBoxComponent* SpawnField;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AEnemyCharacter> SpawnEnemyClass;
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class ASAAIController> SpawnAIControllerClass;
 	UPROPERTY()
 	FTimerHandle SpawnTimerHandle;
 	UPROPERTY()

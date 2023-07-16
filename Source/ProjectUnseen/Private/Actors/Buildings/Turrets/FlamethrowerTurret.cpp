@@ -10,11 +10,14 @@
 #include "Components/AudioComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "GameData/SAStatData.h"
+#include "Components/BoxComponent.h"
 
 AFlamethrowerTurret::AFlamethrowerTurret()
 {
 	ProjectileSpawner = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSpawner"));
 	ProjectileSpawner->SetupAttachment(TurretGunMesh);
+	AttackBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackBox"));
+	AttackBox->SetupAttachment(ProjectileSpawner);
 	LoopingFiresound = CreateDefaultSubobject<UAudioComponent>(TEXT("LoopingFiresound"));
 	LoopingFiresound->SetupAttachment(TurretGunMesh);
 	LoopingFiresound->SetAutoActivate(false);
@@ -24,79 +27,22 @@ AFlamethrowerTurret::AFlamethrowerTurret()
 }
 
 
-void AFlamethrowerTurret::Fire() //문제다문제~ 모르겠다~
+void AFlamethrowerTurret::Fire() //Multi Hit가 고쳐지질 않는다. -> 실린더를 달고 GetOverlappingActors를 써보자.
 {
 	bCanFire = false;
 
-	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectType;
-	//사실 여기서 Pawn으로 하면 내캐릭터도 데미지 받을거라 새로운 채널파주는게 맞긴한데, 화염방사기가 너무 op니 이런페널티도 나쁘지 않을듯
-	ObjectType.Emplace(ECollisionChannel::ECC_Pawn);
-	TArray<FHitResult> HitEnemy;
-	
-	UKismetSystemLibrary::SphereTraceMultiByProfile(
-		this,
-		ProjectileSpawner->GetComponentLocation(),
-		DamageRadius * ProjectileSpawner->GetForwardVector() + ProjectileSpawner->GetComponentLocation(),
-		220.f,
-		FName("EnemyCapsulePreset"),
-		false,
-		TArray<AActor*>(),
-		EDrawDebugTrace::ForDuration,
-		HitEnemy,
-		true
-	);
-
-	/**
-	UKismetSystemLibrary::CapsuleOverlapActors(
-		this,
-		ProjectileSpawner->GetComponentLocation() + FVector(0.f, 0.f, 500.f),
-		500.f,
-		60.f,
-		ObjectType,
-		nullptr,
-		TArray<AActor*>(),
-		HitEnemy
-	);
-	 */
-	//얘는 다단히트된다. 버그잡ㅇ야대ㅗ... 원인은 아마 이 코드자체가 여러번 호출되서 그런듯? 들어가는 데미지가 살짝씩 다르더라고..
-	UE_LOG(LogTemp, Error, TEXT("!"));
-	for (auto HitResult : HitEnemy)
-	{
-		FString HitResultName = HitResult.GetActor()->GetName();
-		UE_LOG(LogTemp, Error, TEXT("%s"), *HitResultName);
-	}
-	
-	//for (FHitResult HitResult : HitEnemy)
-	//{
-	//	FDamageEvent DamageEvent;
-	//	if (IsValid(HitResult.GetActor()))
-	//	{
-	//		FString HitResultName = HitResult.GetActor()->GetName();
-	//		UE_LOG(LogTemp, Error, TEXT("%s"),*HitResultName);
-	//		HitResult.GetActor()->TakeDamage(
-	//			GetStatComponent()->GetAttackDamage(),
-	//			DamageEvent,
-	//			UGameplayStatics::GetPlayerController(this, 0),
-	//			this
-	//		);
-	//	}
-	//}
-
-	/** 
-	for (auto i = 0; HitEnemy.Num(); ++i)
+	TArray<AActor*> OverlappedArray;
+	AttackBox->GetOverlappingActors(OverlappedArray, AEnemyCharacter::StaticClass()); //EnemyCharacter를 그대로 가져올게 아니라 다른 참조방법 없을까?
+	for (auto Target : OverlappedArray)
 	{
 		FDamageEvent DamageEvent;
-		if (IsValid(HitEnemy[i].GetActor())) //이부분에서 배열참조과정에 크러쉬남
-		{
-			HitEnemy[i].GetActor()->TakeDamage(
-				GetStatComponent()->GetAttackDamage(),
-				DamageEvent,
-				UGameplayStatics::GetPlayerController(this, 0),
-				this
-			);
-		}
+		Target->TakeDamage(
+			GetStatComponent()->GetAttackDamage(),
+			DamageEvent,
+			UGameplayStatics::GetPlayerController(this, 0),
+			this);
 	}
-	*/
+
 }
 
 void AFlamethrowerTurret::Tick(float DeltaTime)
