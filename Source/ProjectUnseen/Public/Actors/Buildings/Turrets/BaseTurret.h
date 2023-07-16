@@ -57,8 +57,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	ETurretState TurretState = ETurretState::ETS_MAX;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	TArray<AEnemyCharacter*> EnemyArray;
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true")) //TWeakObjectPtr은 TArray의 요소로 사용될 경우 BP에서 읽을 수 없다. BlueprintReadWrite를 없애야한다.
+	TArray<TWeakObjectPtr<AEnemyCharacter>> EnemyArray;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RotateInterpSpeed = 100.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)

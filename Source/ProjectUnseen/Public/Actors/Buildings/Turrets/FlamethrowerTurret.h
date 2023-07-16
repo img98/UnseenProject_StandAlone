@@ -28,6 +28,8 @@ protected:
 	void SetTurretActivation(bool bBool);
 
 	UPROPERTY(VisibleAnywhere, Category = "Body")
+	TObjectPtr<class UBoxComponent> AttackBox;
+	UPROPERTY(VisibleAnywhere, Category = "Body")
 	USceneComponent* ProjectileSpawner;
 	UPROPERTY(VisibleAnywhere, Category = "Body")
 	UAudioComponent* LoopingFiresound;
