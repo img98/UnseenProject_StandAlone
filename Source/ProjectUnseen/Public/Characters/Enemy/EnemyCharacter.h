@@ -26,7 +26,7 @@ protected:
 	virtual void IsDead() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPriavteAccess = "true"))
-	class UWidgetComponent* HPbarWidget; //HP바와 스탯HP는 블루프린트에서 연결하자.
+	TObjectPtr<class UWidgetComponent> HPbarWidget; //HP바와 스탯HP는 블루프린트에서 연결하자.
 
 private:
 
