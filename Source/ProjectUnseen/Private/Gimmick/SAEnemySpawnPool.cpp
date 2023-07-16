@@ -23,7 +23,7 @@ ASAEnemySpawnPool::ASAEnemySpawnPool()
 void ASAEnemySpawnPool::BeginPlay()
 {
 	Super::BeginPlay();
-
+	//솔직히 불필요한 델리게이트 같다. 그냥 EnemySpawnPool내부에서 타이머를 돌려도 충분하지 않을까?
 	ASAGameMode* GameMode = Cast<ASAGameMode>(GetWorld()->GetAuthGameMode());
 	GameMode->OnInitialSpawn.AddUObject(this, &ASAEnemySpawnPool::Spawn);
 	GameMode->OnIncreasePoolSize.AddUObject(this, &ASAEnemySpawnPool::IncreasePoolSize);
