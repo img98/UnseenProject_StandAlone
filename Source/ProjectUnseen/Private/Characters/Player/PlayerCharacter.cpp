@@ -44,6 +44,7 @@ void APlayerCharacter::BeginPlay()
 	}
 
 	SetPlayerState(EPlayerState::EPS_Shooting);
+	CountPlaytime();
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -164,4 +165,21 @@ void APlayerCharacter::BuildCancel()
 
 	HoldingActor->Destroy();
 	HoldingActor = nullptr;
+}
+
+void APlayerCharacter::CountPlaytime()
+{
+	GetWorld()->GetTimerManager().SetTimer(
+		PlaytimeTimer,
+		this,
+		&APlayerCharacter::BroadcastPlaytimeDelegate,
+		1,
+		true
+	);
+}
+
+void APlayerCharacter::BroadcastPlaytimeDelegate()
+{
+	++Playtime;
+	OnCountPlaytime.Broadcast(Playtime);
 }

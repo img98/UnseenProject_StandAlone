@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "SAGameMode.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FInitialSpawnSignature);
+DECLARE_MULTICAST_DELEGATE(FInitialSpawnSignature)
 DECLARE_MULTICAST_DELEGATE(FIncreasePoolSizeSignature)
 
 UCLASS()
