@@ -1,4 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 #pragma once
 
 #include "CoreMinimal.h"
@@ -6,10 +5,7 @@
 #include "InputActionValue.h"
 #include "PlayerCharacter.generated.h"
 
-class USpringArmComponent;
-class UCameraComponent;
-class UInputMappingContext;
-class UInputAction;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCountPlaytimeSignature, const int, Playtime);
 
 UENUM(BlueprintType)
 enum class EPlayerState : uint8
@@ -24,9 +20,8 @@ enum class EPlayerState : uint8
 UCLASS()
 class PROJECTUNSEEN_API APlayerCharacter : public ABaseCharacter
 {
-
 	GENERATED_BODY()
-
+	
 public:
 	APlayerCharacter();
 
@@ -41,9 +36,9 @@ protected:
 	virtual void SetPlayerState(EPlayerState InState);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	USpringArmComponent* SpringArm;
+	class USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UCameraComponent* MainCamera;
+	class UCameraComponent* MainCamera;
 	UPROPERTY()
 	APlayerController* PlayerController;
 
@@ -53,9 +48,9 @@ protected:
 	/** Enhanced Input */
 	/** Player Combat InputMappingContext*/
 	UPROPERTY(EditAnywhere, Category = Input)
-	UInputMappingContext* IMC_PlayerCombat;
+	class UInputMappingContext* IMC_PlayerCombat;
 	UPROPERTY(EditAnywhere, Category = Input)
-	UInputAction* IA_Movement;
+	class UInputAction* IA_Movement;
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* IA_Fire;
 	UPROPERTY(EditAnywhere, Category = Input)
@@ -76,6 +71,7 @@ protected:
 
 	void Fire();
 
+	//Make BuildComponent
 	UFUNCTION(BlueprintCallable)
 	void BuildStart(UClass* InBuildingRef);
 	UFUNCTION(BlueprintCallable)
@@ -85,7 +81,19 @@ protected:
 	UPROPERTY()
 	AActor* HoldingActor;
 
-private:
+	//Make PlayTimeComponent;
+	UFUNCTION()
+	void CountPlaytime();
+	UPROPERTY()
+	FTimerHandle PlaytimeTimer;
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPriavteAccess = "true"))
+	int Playtime;
+	UFUNCTION()
+	void BroadcastPlaytimeDelegate();
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FCountPlaytimeSignature OnCountPlaytime;
 
 
 };

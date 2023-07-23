@@ -72,7 +72,7 @@ void ABaseTurret::TurretBehaviorStateMachine(float DeltaTime)
 			if (bCanFire)
 			{
 				Fire(); //raycast 해서 있으면 발사되게해도 괜찮을듯? 아니면 내적을 사용해 일정각도 이하일때만 발사
-				FireDelay(DeltaTime);
+				FireDelay();
 			}
 			break;
 		}
@@ -122,7 +122,7 @@ void ABaseTurret::Fire()
 	bCanFire = false;
 }
 
-void ABaseTurret::FireDelay(float DeltaTime)
+void ABaseTurret::FireDelay()
 {
 	GetWorld()->GetTimerManager().SetTimer(
 		FireTimer,

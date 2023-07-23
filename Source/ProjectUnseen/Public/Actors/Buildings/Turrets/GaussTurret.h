@@ -36,7 +36,7 @@ protected:
 	float CoolingInterpSpeed = 2.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
-	TSubclassOf<ABaseProjectile> ProjectileClass;
+	TSubclassOf<class ABaseProjectile> ProjectileClass;
 
 private:
 
