@@ -6,12 +6,7 @@
 #include "Actors/Buildings/BaseBuildingActor.h"
 #include "Enum/TurretState.h"
 #include "TurretInterface.h"
-
 #include "BaseTurret.generated.h"
-
-class USphereComponent;
-class AEnemyCharacter;
-class ABaseProjectile;
 
 UCLASS()
 class PROJECTUNSEEN_API ABaseTurret : public ABaseBuildingActor, public ITurretInterface
@@ -23,9 +18,7 @@ public:
 	ABaseTurret();
 
 	virtual void Tick(float DeltaTime) override;
-
 	virtual void TurretBehaviorStateMachine(float DeltaTime);
-
 	virtual void BuildCompleted() override;
 
 protected:
