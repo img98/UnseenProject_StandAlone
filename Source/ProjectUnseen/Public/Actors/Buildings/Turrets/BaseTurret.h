@@ -34,7 +34,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Body")
 	USceneComponent* RotateGunAnchor;
 	UPROPERTY(VisibleAnywhere, Category = "Body")
-	USphereComponent* FireField;
+	class USphereComponent* FireField;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class USAStatData* StatData;
@@ -45,13 +45,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CustomClassSetup")
 	USoundBase* FireSound;
 
-	//터렛 프로퍼티
-	FTimerHandle FireTimer;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	ETurretState TurretState = ETurretState::ETS_MAX;
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true")) //TWeakObjectPtr은 TArray의 요소로 사용될 경우 BP에서 읽을 수 없다. BlueprintReadWrite를 없애야한다.
-	TArray<TWeakObjectPtr<AEnemyCharacter>> EnemyArray;
+	TArray<TWeakObjectPtr<class AEnemyCharacter>> EnemyArray;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RotateInterpSpeed = 100.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -73,7 +70,8 @@ protected:
 	UFUNCTION()
 	virtual void Fire();
 	UFUNCTION()
-	virtual void FireDelay(float DeltaTime);
+	virtual void FireDelay();
+	FTimerHandle FireTimer;
 
 
 private:

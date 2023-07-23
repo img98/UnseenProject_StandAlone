@@ -7,6 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Actors/Projectiles/BaseProjectile.h"
 #include "Components/BoxComponent.h"
+#include "Characters/Enemy/EnemyCharacter.h"
 
 AGaussTurret::AGaussTurret()
 {
@@ -21,27 +22,35 @@ AGaussTurret::AGaussTurret()
 void AGaussTurret::Fire()
 {
 	bCanFire = false;
-	GetGunFever(GunFever);
-
-	if (ProjectileClass && FireSound && MuzzleParticle)
+	
+	//내적해서 15도 이내에 없으면 발사하지 않는다.
+	AEnemyCharacter* Target = EnemyArray[0].Get();
+	float DotProduct = FVector::DotProduct(RotateGunAnchor->GetForwardVector(), Target->GetActorLocation() - this->GetActorLocation());
+	float AcosAngle = FMath::Acos(DotProduct);
+	float DotProductAngle = FMath::RadiansToDegrees(AcosAngle);
+	if (DotProductAngle / 2 > 15.f)
 	{
-		APawn* InstigatorPawn = Cast<APawn>(GetOwner());
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.Instigator = InstigatorPawn;
-
-		ABaseProjectile* SpawnedProjectile = GetWorld()->SpawnActor<ABaseProjectile>(
-			ProjectileClass,
-			ProjectileSpawner->GetComponentLocation(),
-			ProjectileSpawner->GetComponentRotation(),
-			SpawnParams
-		);
-		SpawnedProjectile->SetParnetTurret(this);
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, ProjectileSpawner->GetComponentLocation());
-		UGameplayStatics::SpawnEmitterAttached(
-			MuzzleParticle,
-			ProjectileSpawner
-		);
+		return;
 	}
+
+	// Spawn Projectile and Play Sound, Spawn Emitter
+	check(ProjectileClass && FireSound && MuzzleParticle)
+	GetGunFever(GunFever);
+	APawn* InstigatorPawn = Cast<APawn>(GetOwner());
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Instigator = InstigatorPawn;
+	ABaseProjectile* SpawnedProjectile = GetWorld()->SpawnActor<ABaseProjectile>(
+		ProjectileClass,
+		ProjectileSpawner->GetComponentLocation(),
+		ProjectileSpawner->GetComponentRotation(),
+		SpawnParams
+	);
+	SpawnedProjectile->SetParnetTurret(this);
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), FireSound, ProjectileSpawner->GetComponentLocation());
+	UGameplayStatics::SpawnEmitterAttached(
+		MuzzleParticle,
+		ProjectileSpawner
+	);
 }
 
 void AGaussTurret::Tick(float DeltaTime)

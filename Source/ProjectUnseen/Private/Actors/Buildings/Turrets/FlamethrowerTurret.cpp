@@ -31,12 +31,23 @@ void AFlamethrowerTurret::Fire() //Multi Hit가 고쳐지질 않는다. -> 실린더를 달고
 {
 	bCanFire = false;
 
+	//내적해서 15도 이내에 없으면 발사하지 않는다.
+	AEnemyCharacter* Target = EnemyArray[0].Get();
+	float DotProduct = FVector::DotProduct(RotateGunAnchor->GetForwardVector(), Target->GetActorLocation() - this->GetActorLocation());
+	float AcosAngle = FMath::Acos(DotProduct);
+	float DotProductAngle = FMath::RadiansToDegrees(AcosAngle);
+	if (DotProductAngle / 2 > 15.f)
+	{
+		return;
+	}
+
+	SetTurretActivation(true);
 	TArray<AActor*> OverlappedArray;
 	AttackBox->GetOverlappingActors(OverlappedArray, AEnemyCharacter::StaticClass()); //EnemyCharacter를 그대로 가져올게 아니라 다른 참조방법 없을까?
-	for (auto Target : OverlappedArray)
+	for (auto OverlappedActors : OverlappedArray)
 	{
 		FDamageEvent DamageEvent;
-		Target->TakeDamage(
+		OverlappedActors->TakeDamage(
 			GetStatComponent()->GetAttackDamage(),
 			DamageEvent,
 			UGameplayStatics::GetPlayerController(this, 0),
@@ -81,7 +92,6 @@ void AFlamethrowerTurret::TurretBehaviorStateMachine(float DeltaTime) //SetTurre
 		case ETurretState::ETS_InCombat:
 		{
 			LookAtEnemy(DeltaTime);
-			SetTurretActivation(true); //얘네만 다름!
 
 			if (EnemyArray.Num() < 1)
 			{
@@ -91,7 +101,7 @@ void AFlamethrowerTurret::TurretBehaviorStateMachine(float DeltaTime) //SetTurre
 			else if (bCanFire)
 			{
 				Fire();
-				FireDelay(DeltaTime);
+				FireDelay();
 			}
 			break;
 		}
