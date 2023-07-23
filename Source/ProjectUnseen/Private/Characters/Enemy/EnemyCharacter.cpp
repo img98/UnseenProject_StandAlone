@@ -67,11 +67,10 @@ void AEnemyCharacter::Deactivate()
 	{
 		if (AIController->GetBrainComponent()->IsRunning())
 		{
-			AIController->GetBrainComponent()->StopLogic(FString("Deactivated")); //StopLogic의 인자로 FString Reason을 넣어줘야 하는데, 뭘넣어줘야하지? 그냥 아무거나 써도되나?
+			AIController->GetBrainComponent()->StopLogic(FString("Deactivated"));
 		}
 		SetActorHiddenInGame(true);
 		SetActorEnableCollision(false);
-		//SetActorTickEnabled(false);
 	}
 }
 
