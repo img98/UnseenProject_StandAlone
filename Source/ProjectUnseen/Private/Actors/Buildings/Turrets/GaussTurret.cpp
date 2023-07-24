@@ -22,16 +22,7 @@ AGaussTurret::AGaussTurret()
 void AGaussTurret::Fire()
 {
 	bCanFire = false;
-	
-	//내적해서 15도 이내에 없으면 발사하지 않는다.
-	AEnemyCharacter* Target = EnemyArray[0].Get();
-	float DotProduct = FVector::DotProduct(RotateGunAnchor->GetForwardVector(), Target->GetActorLocation() - this->GetActorLocation());
-	float AcosAngle = FMath::Acos(DotProduct);
-	float DotProductAngle = FMath::RadiansToDegrees(AcosAngle);
-	if (DotProductAngle / 2 > 15.f)
-	{
-		return;
-	}
+	if (CheckDotproduct()) return;
 
 	// Spawn Projectile and Play Sound, Spawn Emitter
 	check(ProjectileClass && FireSound && MuzzleParticle)

@@ -21,16 +21,7 @@ ATeslaTurret::ATeslaTurret()
 void ATeslaTurret::Fire()
 {
 	bCanFire = false;
-
-	//내적해서 15도 이내에 없으면 발사하지 않는다.
-	AEnemyCharacter* Target = EnemyArray[0].Get();
-	float DotProduct = FVector::DotProduct(RotateGunAnchor->GetForwardVector(), Target->GetActorLocation() - this->GetActorLocation());
-	float AcosAngle = FMath::Acos(DotProduct);
-	float DotProductAngle = FMath::RadiansToDegrees(AcosAngle);
-	if (DotProductAngle / 2 > 15.f)
-	{
-		return;
-	}
+	if (CheckDotproduct()) return;
 
 	check(FireSound && MuzzleParticle);
 	GetGunFever(GunFever);
@@ -42,6 +33,7 @@ void ATeslaTurret::Fire()
 	// No Projectile -> Approach by Memory
 	if (EnemyArray.IsValidIndex(0))
 	{
+		AEnemyCharacter* Target = EnemyArray[0].Get();
 		if (Target && HitSound && HitParticle)
 		{
 			FDamageEvent DamageEvent;
