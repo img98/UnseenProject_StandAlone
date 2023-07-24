@@ -94,6 +94,18 @@ void ABaseTurret::BeginPlay()
 	StatComponent->SetStats(StatData);
 }
 
+bool ABaseTurret::CheckDotproduct()
+{
+	AEnemyCharacter* Target = EnemyArray[0].Get();
+	FVector RotatorForwardVector = RotateGunAnchor->GetForwardVector();
+	FVector ForwardVector = FVector(RotatorForwardVector.X, RotatorForwardVector.Y, 0);
+	FVector ToTargetVector = FVector(Target->GetActorLocation() - this->GetActorLocation());
+	float DotProduct = FVector::DotProduct(ForwardVector, ToTargetVector);
+	float AcosAngle = FMath::Acos(DotProduct);
+	float DotProductAngle = FMath::RadiansToDegrees(AcosAngle);
+	return DotProductAngle / 2 > FireAngle ? true : false;
+}
+
 void ABaseTurret::RotateTurret()
 {
 	//빙빙돌기 or 고개숙이기 . 비주얼적 요소이기에 최후부에 구현하자

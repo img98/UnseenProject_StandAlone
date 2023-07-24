@@ -57,6 +57,12 @@ protected:
 	UFUNCTION()
 	FORCEINLINE void SetTurretState(ETurretState InState) { TurretState = InState; };
 
+	// if angle bigger than FireAngle, return true
+	UFUNCTION()
+	bool CheckDotproduct();
+	UPROPERTY()
+	float FireAngle = 15.f;
+
 	UFUNCTION()
 	void RotateTurret();
 	UFUNCTION()
