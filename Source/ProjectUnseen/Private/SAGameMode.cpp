@@ -35,7 +35,7 @@ void ASAGameMode::BeginPlay()
 		IncreasePoolSizeTimer,
 		this,
 		&ASAGameMode::IncreasePoolSize,
-		10.f, //DataAsset으로 관리하는게 나을지도?
+		10.f,
 		true
 	);
 }

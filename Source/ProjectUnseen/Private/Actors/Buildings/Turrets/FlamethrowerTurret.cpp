@@ -27,7 +27,7 @@ AFlamethrowerTurret::AFlamethrowerTurret()
 }
 
 
-void AFlamethrowerTurret::Fire() //Multi Hit가 고쳐지질 않는다. -> 실린더를 달고 GetOverlappingActors를 써보자.
+void AFlamethrowerTurret::Fire()
 {
 	bCanFire = false;
 	if (CheckDotproduct()) return;
@@ -50,8 +50,7 @@ void AFlamethrowerTurret::Fire() //Multi Hit가 고쳐지질 않는다. -> 실린더를 달고
 void AFlamethrowerTurret::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//TODO:: IsPower가 들어와있을때 전구에 불들어오는것 구현 SetMaterialindex로 GunMesh 바꾸면됨
+	
 }
 
 void AFlamethrowerTurret::TurretBehaviorStateMachine(float DeltaTime) //SetTurretActivation함수를 넣어줘야해서 override로 만들필요있었음
@@ -73,7 +72,6 @@ void AFlamethrowerTurret::TurretBehaviorStateMachine(float DeltaTime) //SetTurre
 		}
 		case ETurretState::ETS_Searching:
 		{
-			RotateTurret();
 			if (EnemyArray.Num() > 0)
 			{
 				SetTurretState(ETurretState::ETS_InCombat);

@@ -64,8 +64,6 @@ protected:
 	float FireAngle = 15.f;
 
 	UFUNCTION()
-	void RotateTurret();
-	UFUNCTION()
 	void LookAtEnemy(float DeltaTime);
 
 	UFUNCTION()

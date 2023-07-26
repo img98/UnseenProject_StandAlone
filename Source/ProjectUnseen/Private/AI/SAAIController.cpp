@@ -8,7 +8,7 @@
 #include "Navigation/CrowdFollowingComponent.h"
 
 ASAAIController::ASAAIController(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent"))) //Detour Crowd AI Controller를 넣기위한 코드. 이해는 안된다..
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent"))) //Detour Crowd AI Controller를 넣기위한 코드.
 {
 	static ConstructorHelpers::FObjectFinder<UBlackboardData> BBAssetRef(TEXT("/Game/Blueprints/EnemyCharacter/Maynard/BB_HordeEnemy.BB_HordeEnemy")); //만든 BB경로를 넣어줘야한다. 싫으면, Ref말고 직접 BP에서 넣는방식 써도됨
 	if (nullptr != BBAssetRef.Object)

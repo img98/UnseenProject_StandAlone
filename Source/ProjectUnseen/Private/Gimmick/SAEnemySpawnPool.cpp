@@ -23,7 +23,7 @@ ASAEnemySpawnPool::ASAEnemySpawnPool()
 void ASAEnemySpawnPool::BeginPlay()
 {
 	Super::BeginPlay();
-	//솔직히 불필요한 델리게이트 같다. 그냥 EnemySpawnPool내부에서 타이머를 돌려도 충분하지 않을까?
+
 	ASAGameMode* GameMode = Cast<ASAGameMode>(GetWorld()->GetAuthGameMode());
 	GameMode->OnInitialSpawn.AddUObject(this, &ASAEnemySpawnPool::Spawn);
 	GameMode->OnIncreasePoolSize.AddUObject(this, &ASAEnemySpawnPool::IncreasePoolSize);
@@ -32,8 +32,6 @@ void ASAEnemySpawnPool::BeginPlay()
 	for (int32 i = 0; i < MaxPoolPopulation; ++i)
 	{
 		// SpawnActor의 템플릿을 후에 DataAsset 테이블로 만들어, 생성되는 액터의 다양성을 줄 수 있겠다.
-		// Spawn Parameter 사용X <-따로 필요성을 못느껴서
-		// [1] 생성자에는 SpawnActor를 못쓰고, [2] 생성자에서 Pawn을 생성하는법을 모르겠고, [3]그렇다고 캐릭터를 CreateDefaultSubobject로 쓸순없으니() 어쩔수없이 BeginPlay에서 생성했다.(초반에만 부담 조금 주지머)
 		AEnemyCharacter* SpawnedCharacter = GetWorld()->SpawnActor<AEnemyCharacter>(
 			SpawnEnemyClass,
 			UKismetMathLibrary::RandomPointInBoundingBox(SpawnField->GetComponentLocation(), SpawnField->GetScaledBoxExtent()),
@@ -69,7 +67,7 @@ void ASAEnemySpawnPool::Spawn() //Delegate로 인해 실행
 		this,
 		&ASAEnemySpawnPool::Spawn,
 		SpawnDelay,
-		false //repeat Timer, 이미 함수내에서 재귀적으로 호출하기에 여기는 False해줘야할듯?
+		false //repeat Timer, 이미 함수내에서 재귀적으로 호출하기에 여기는 False
 	);
 }
 

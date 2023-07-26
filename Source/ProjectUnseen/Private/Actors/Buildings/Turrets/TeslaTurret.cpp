@@ -44,7 +44,7 @@ void ATeslaTurret::Fire()
 				HitParticle,
 				Target->GetActorLocation(),
 				ProjectileSpawner->GetComponentRotation(),
-				FVector(0.4f) //Scale 0.4f will be fit
+				FVector(0.4f)
 			);
 		}
 	}

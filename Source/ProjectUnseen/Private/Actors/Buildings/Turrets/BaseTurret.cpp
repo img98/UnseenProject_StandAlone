@@ -42,7 +42,7 @@ void ABaseTurret::TurretBehaviorStateMachine(float DeltaTime)
 		{
 
 			FHitResult CurorHitResult;
-			UGameplayStatics::GetPlayerController(this, 0)->GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, CurorHitResult); // 후에 Build용 traceChannel만들어서 바꿀것, traceComplex먼지몰라서 true
+			UGameplayStatics::GetPlayerController(this, 0)->GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, CurorHitResult);
 			
 			float InGridSize = 50.f;
 			FVector BuildPosition = UKismetMathLibrary::Vector_SnappedToGrid(CurorHitResult.Location, InGridSize);
@@ -53,7 +53,6 @@ void ABaseTurret::TurretBehaviorStateMachine(float DeltaTime)
 		}
 		case ETurretState::ETS_Searching:
 		{
-			RotateTurret();
 			if (EnemyArray.Num() > 0) //이또한 OnConstruct등을 사용해 내부 프로퍼티가 변하면 State를 변하게 설정해주면 Tick에서 뺄수있다.
 			{
 				SetTurretState(ETurretState::ETS_InCombat);
@@ -71,7 +70,7 @@ void ABaseTurret::TurretBehaviorStateMachine(float DeltaTime)
 			}
 			if (bCanFire)
 			{
-				Fire(); //raycast 해서 있으면 발사되게해도 괜찮을듯? 아니면 내적을 사용해 일정각도 이하일때만 발사
+				Fire();
 				FireDelay();
 			}
 			break;
@@ -106,14 +105,9 @@ bool ABaseTurret::CheckDotproduct()
 	return DotProductAngle / 2 > FireAngle ? true : false;
 }
 
-void ABaseTurret::RotateTurret()
-{
-	//빙빙돌기 or 고개숙이기 . 비주얼적 요소이기에 최후부에 구현하자
-}
-
 void ABaseTurret::LookAtEnemy(float DeltaTIme)
 {
-	if (!EnemyArray.IsValidIndex(0)) return; //이걸 안해주니까 시작하자마자 크래쉬나더라
+	if (!EnemyArray.IsValidIndex(0)) return;
 
 	AEnemyCharacter* Target = EnemyArray[0].Get(); //약참조를 사용하기에 Get()을 사용해서 유효성을 확인해줘야한다.
 	if (Target == nullptr) return;
@@ -122,15 +116,11 @@ void ABaseTurret::LookAtEnemy(float DeltaTIme)
 	const FRotator InterpTargetRotator = UKismetMathLibrary::RInterpTo_Constant(RotateGunAnchor->GetComponentRotation(), LookTargetRotator, DeltaTIme, RotateInterpSpeed);
 	TurretBodyMesh->SetWorldRotation(FRotator(0.f, InterpTargetRotator.Yaw, 0.f));
 	TurretGunMesh->SetRelativeRotation(FRotator(InterpTargetRotator.Pitch, 0.f, 0.f));
-
-	// TODO : Rotate가 현위치에서 목적지까지 부드럽게 움직이는 방법을 고안해보자.
-
 }
 
 void ABaseTurret::Fire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("[%s] Fire함수의 재정의가 이루어지지 않았습니다. 자식Class에서 정의해주세요"), *GetName());
-
 	bCanFire = false;
 }
 
@@ -139,7 +129,6 @@ void ABaseTurret::FireDelay()
 	GetWorld()->GetTimerManager().SetTimer(
 		FireTimer,
 		FTimerDelegate::CreateLambda([&]() {
-			//TODO : Just Wait for 'Firespeed' seconds & ClearTimer
 			bCanFire = true;
 			GetWorld()->GetTimerManager().ClearTimer(FireTimer);
 			}),

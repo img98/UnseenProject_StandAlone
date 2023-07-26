@@ -20,19 +20,15 @@ ABaseProjectile::ABaseProjectile()
 
 	SphereCollision->SetSphereRadius(4.f);
 	SphereCollision->SetCollisionProfileName(TEXT("Projectile"));
-	/** Physics의 advanced의 WalkableSlope & Collision의 CanCharacterStepUpOn을 바꿔줘야 하는가?*/
-	//SphereCollision->GetWalkableSlopeOverride ???
 
 	BulletMesh->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
 	BulletMesh->SetRelativeScale3D(FVector(0.03f, 0.03f, 0.3f));
 	BulletMesh->SetGenerateOverlapEvents(false);
-	/** Physics-AutoWeld 안꺼줘도 콜리젼프리셋 NoCollision으로 하면 괜찮지 않을까?*/
 	BulletMesh->SetCollisionProfileName(TEXT("NoCollision"));
 	BulletMesh->SetCastShadow(false);
 	ProjectileMovementComponent->InitialSpeed = 6000.f;
 	ProjectileMovementComponent->MaxSpeed = 6000.f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
-	//velocity(로테이션말고 말그대로 velocity란이 있더라)와 bounce설정이 필요한가?
 	ProjectileMovementComponent->bShouldBounce = true;
 	ProjectileMovementComponent->Velocity = FVector(600.f, 0.f, 0.f);
 
@@ -47,7 +43,7 @@ void ABaseProjectile::BeginPlay()
 
 void ABaseProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, Hit.Location, 1.5f, 1.5f); //voulume&pitch multiplier = 0.5, 1.5
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, Hit.Location, 1.5f, 1.5f);
 	if (!IsValid(OtherActor))
 	{
 		Destroy();
@@ -61,7 +57,7 @@ void ABaseProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActo
 			OtherActor->TakeDamage(
 				ParentTurret->GetStatComponent()->GetAttackDamage(),
 				DamageEvent,
-				UGameplayStatics::GetPlayerController(this, 0), //후에 ParentTurret의 ParentPlayer를 찾아서 컨트롤러를 연결해주자
+				UGameplayStatics::GetPlayerController(this, 0),
 				this //그저 this가 아니라 ParentTurret의 ParentPlayer로 해주는게 좋을지도 모르겠다.
 			);
 		}

@@ -7,7 +7,7 @@
 UStatComponent::UStatComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-	bWantsInitializeComponent = true; //이걸 해야 InitializeComponent 함수가 호출됨.
+	bWantsInitializeComponent = true;
 }
 
 

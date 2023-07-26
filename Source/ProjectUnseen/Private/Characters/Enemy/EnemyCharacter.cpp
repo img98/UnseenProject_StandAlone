@@ -11,11 +11,6 @@
 
 AEnemyCharacter::AEnemyCharacter()
 {
-	/** 어그로 영역이 필요없을것 같다. 어쩌피 캐릭터에게 달려올것이니까
-	AggroSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AggroSphere"));
-	AggroSphere->SetupAttachment(GetRootComponent());
-	AggroSphere->SetCollisionProfileName(TEXT("AggroSpherePreset"));
-	*/
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("EnemyCapsulePreset"));
 
 	HPbarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPbarWidget"));
@@ -53,7 +48,6 @@ void AEnemyCharacter::Activate()
 			AIController->GetBrainComponent()->RestartLogic();
 			SetActorHiddenInGame(false);
 			SetActorEnableCollision(true);
-			//SetActorTickEnabled(true);
 		}
 	}
 
@@ -74,7 +68,7 @@ void AEnemyCharacter::Deactivate()
 	}
 }
 
-void AEnemyCharacter::IsDead() //사망애니메이션 재생 후, Notify든 몽타주 등을 통해 IsDead를 호출하는게 좋을것같다. 안그러면 애니메이션 끝나기도 전에 Deactivate된다.
+void AEnemyCharacter::IsDead() //사망애니메이션 재생 후, Notify든 몽타주 델리게이트 등을 통해 IsDead를 호출하는게 좋을것같다. 안그러면 애니메이션 끝나기도 전에 Deactivate된다.
 {
 	//죽으면 필요한 기능들
 	Deactivate();

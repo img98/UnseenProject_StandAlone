@@ -16,7 +16,7 @@ AGaussTurret::AGaussTurret()
 	ProjectileSpawner = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSpawner"));
 	ProjectileSpawner->SetupAttachment(TurretGunMesh);
 
-	//HotMetal->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	HotMetal->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
 void AGaussTurret::Fire()
